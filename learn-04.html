@@ -9,30 +9,199 @@
   h1 { font-size: 22px; border-bottom: 2px solid #c084fc; padding-bottom: 8px; margin-bottom: 16px; }
   h2 { font-size: 18px; margin-top: 28px; margin-bottom: 12px; color: #c084fc; }
   h3 { font-size: 15px; margin-top: 16px; margin-bottom: 8px; color: #a78bfa; }
+  h4 { font-size: 14px; margin-top: 12px; margin-bottom: 6px; color: #c0c0c0; }
   blockquote { border-left: 3px solid #60a5fa; padding-left: 12px; margin: 12px 0; color: #9ca3af; }
-  .stub-box { background: #2e2e2e; border-left: 4px solid #c084fc; padding: 16px; margin: 24px 0; border-radius: 6px; }
-  .stub-box p { margin: 4px 0; }
-  ul { padding-left: 22px; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+  th, td { border: 1px solid #3a3a3a; padding: 8px 10px; font-size: 13px; text-align: left; }
+  th { background: #2e2e2e; }
+  ul, ol { padding-left: 22px; }
   li { margin-bottom: 4px; }
+  code { background: #2e2e2e; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  pre { background: #0e0e0e; border: 1px dashed #3a3a3a; padding: 12px; border-radius: 6px; overflow-x: auto; }
+  pre code { background: none; padding: 0; }
+  hr { border: none; border-top: 1px solid #3a3a3a; margin: 24px 0; }
+  input[type="checkbox"] { margin-right: 6px; }
+  strong { color: #f0f0f0; }
 </style>
 </head>
 <body>
 <h1>Ch.04 自動化レベルとワークフロー設計</h1>
-<blockquote>公式テキスト第4章。AI業務適用の自動化レベル（L0〜L5）とワークフロー設計の章。</blockquote>
-
-<div class="stub-box">
-  <p><strong>準備中</strong></p>
-  <p>このChapterの学習資料は現在作成中です。バリヤード（エデュラボ教材制作）からの成果物（phase-04.md）が完成次第、このページに展開されます。</p>
-</div>
-
-<h2>このChapterで扱う想定トピック</h2>
+<blockquote>
+<p>公式テキスト Chapter 04 より要約
+セクション数: 4</p>
+</blockquote>
+<hr>
+<h2>4-1. 自動化レベルの進化論と実務における最適解</h2>
+<h3>覚えること</h3>
 <ul>
-  <li>AI業務における自動化レベルの整理（部分自動化〜全自動）</li>
-  <li>業務プロセスとAIの結合点設計</li>
-  <li>ワークフロー設計の基本パターン</li>
-  <li>人とAIの責任分担モデル</li>
+<li>「いきなり全自動」は多くのプロジェクトを失敗に導く</li>
+<li>段階的アプローチが組織の信頼を積む</li>
+</ul>
+<h3>4段階の自動化レベル</h3>
+<ul>
+<li><strong>Lv.1 アドホック</strong>: 必要なときに都度使う（ChatGPTそのまま利用）。仕組み化されていない</li>
+<li><strong>Lv.2 カスタムチャットボット</strong>: GPTs・Gem・Claudeプロジェクト等で専門性を持たせる。受動的な対話型</li>
+<li><strong>Lv.3 ワークフロー</strong>: トリガー起動で複数ステップを自動連鎖。「決められたレールを走る電車」。Dify・Zapier・Make・Copilot Studio</li>
+<li><strong>Lv.4 自律型エージェント</strong>: 目標から計画・実行を自ら組み立てる。「自家用車」。Manus・Claude Cowork等</li>
+</ul>
+<h3>レベル境界線</h3>
+<ul>
+<li>Lv.1とLv.2: 仕組み化されているか</li>
+<li>Lv.2とLv.3: AIが自ら動くか + システム連携があるか</li>
+<li>Lv.3とLv.4: フロー構造自体をAIが作ったか</li>
+</ul>
+<h3>試験頻出ポイント</h3>
+<ul>
+<li>MVPアプローチ: 最小限で価値を証明し、データに基づいて次の投資判断</li>
+<li>Manusの教訓: ファインチューニングよりコンテキストエンジニアリング</li>
+</ul>
+<h3>自分メモ</h3>
+<pre><code>
+</code></pre>
+<hr>
+<h2>4-2. ワークフロー設計 トリガーとアクション</h2>
+<h3>覚えること</h3>
+<ul>
+<li>ワークフロー＝トリガー（きっかけ）+ アクション（処理）</li>
+</ul>
+<h3>トリガー3分類</h3>
+<ul>
+<li><strong>指示型</strong>:<ul>
+<li>チャット・音声指示</li>
+<li>手動実行（ボタン）</li>
+</ul>
+</li>
+<li><strong>定時型</strong>:<ul>
+<li>スケジュール実行（毎朝9時等）</li>
+<li>期限・日付ベース（契約更新30日前等）</li>
+</ul>
+</li>
+<li><strong>条件型</strong>:<ul>
+<li>イベントトリガー（CRMステータス変更等）</li>
+<li>フォーム送信</li>
+<li>Webhook（外部システムから通知）</li>
+<li>閾値トリガー（在庫数下回り等）</li>
+</ul>
+</li>
+</ul>
+<h3>イベントトリガー vs Webhookの違い</h3>
+<ul>
+<li>イベントトリガー: ワークフロー側が監視</li>
+<li>Webhook: 外部システム側が通知</li>
+</ul>
+<h3>アクション3分類</h3>
+<ul>
+<li><strong>データ処理</strong>: APIコール（取得）・データ抽出/構造化・データ変換/整形</li>
+<li><strong>生成・判断</strong>: コンテンツ生成・分類/振り分け・判断/条件分岐</li>
+<li><strong>実行・連携</strong>: APIコール（送信）・ファイル操作・Human-in-the-Loop</li>
+</ul>
+<h3>試験頻出ポイント</h3>
+<ul>
+<li>データ取得と送信は方向が逆のAPIコール</li>
+<li>HTAで分解した業務がそのままワークフロー設計図になる</li>
+</ul>
+<h3>自分メモ</h3>
+<pre><code>
+</code></pre>
+<hr>
+<h2>4-3. ワークフロー設計 変数と条件分岐</h2>
+<h3>覚えること</h3>
+<ul>
+<li><strong>変数</strong>: ワークフロー内でデータを一時保持する「名前付きの箱」</li>
+<li>変数のデータ源: トリガー情報 / 外部システム / 前アクション出力</li>
+</ul>
+<h3>条件分岐3種類</h3>
+<ul>
+<li><strong>If/Else</strong>: 二択分岐（1,000万円以上 vs 未満）</li>
+<li><strong>ルーティング</strong>: 3方向以上への振り分け（業界別テンプレ4種）</li>
+<li><strong>フィルタリング</strong>: 通過/遮断の選別（受注成功のみ通過）</li>
+</ul>
+<h3>見分けのポイント</h3>
+<ul>
+<li>2択 → If/Else</li>
+<li>3方向以上の振り分け → ルーティング</li>
+<li>通過/遮断の選別 → フィルタリング</li>
+</ul>
+<h3>エラーハンドリング</h3>
+<ul>
+<li>「正常か？」のIf/Else応用</li>
+<li>フォールバック: APIコール失敗時に「Slack通知して手動依頼」</li>
+<li>完全自動化でなく、人間が介入できる経路を残すのが責任ある設計</li>
+</ul>
+<h3>試験頻出ポイント</h3>
+<ul>
+<li>条件分岐は「提案の成否に最も影響する変数」に絞る（細かすぎはメンテ困難・粗すぎは品質低下）</li>
+<li>エラーハンドリングはHuman-in-the-Loop設計と直結</li>
+</ul>
+<h3>自分メモ</h3>
+<pre><code>
+</code></pre>
+<hr>
+<h2>4-4. コンテキストエンジニアリング概論</h2>
+<h3>覚えること</h3>
+<ul>
+<li><strong>コンテキストエンジニアリング</strong>: LLMに渡す文脈情報を体系的に設計・管理する技術</li>
+<li>Andrej Karpathy氏: 「LLMはOS、コンテキストウィンドウはRAM」</li>
+<li>プロンプトエンジニアリングは指示文に焦点。コンテキストエンジニアリングはその上位概念（指示+文書+ツール+履歴すべて）</li>
+</ul>
+<h3>コンテキストエンジニアリングが解決する4課題</h3>
+<ul>
+<li><strong>入力可能な情報量の限界</strong>: コンテキストウィンドウ上限</li>
+<li><strong>認識の限界（Lost in the Middle）</strong>: LLMは先頭・末尾を参照しやすく中間を見落とす</li>
+<li><strong>コンテキスト汚染</strong>: ハルシネーション混入による連鎖</li>
+<li><strong>コンテキスト混乱</strong>: 無関係/矛盾情報で推論阻害</li>
+</ul>
+<h3>LLMに渡す情報の7種類</h3>
+<ol>
+<li><strong>システムプロンプト</strong>: 役割・前提・制約・行動指針</li>
+<li><strong>ユーザープロンプト</strong>: 都度の指示・入力</li>
+<li><strong>短期メモリ</strong>: 現セッション内の対話履歴</li>
+<li><strong>長期メモリ</strong>: セッションをまたぐ蓄積（手続き記憶/エピソード記憶/意味記憶）</li>
+<li><strong>外部知識（RAG）</strong>: 実行時にナレッジベース検索</li>
+<li><strong>ツールの情報</strong>: 利用可能ツールの定義・使い方</li>
+<li><strong>構造化出力</strong>: JSONや特定テンプレ等の応答形式指定</li>
+</ol>
+<h3>4つの手法</h3>
+<ul>
+<li><strong>Write（書き出し）</strong>: 重要情報を外部保存（ManusのToDoリスト）</li>
+<li><strong>Select（選択）</strong>: 必要な情報だけ取り出す</li>
+<li><strong>Compress（圧縮）</strong>: 要約・削減（情報欠落リスクあり最後の手段）</li>
+<li><strong>Isolate（分割）</strong>: 複雑問題を小さく分けて処理（マルチエージェント等）</li>
+</ul>
+<h3>4つの設計原則</h3>
+<ul>
+<li><strong>必要十分の原則</strong>: 「あれば便利」でなく「なければ正しい出力ができないか」</li>
+<li><strong>構造化の原則</strong>: 重要制約は冒頭、参照と指示を区別、リスト・見出しで構造化</li>
+<li><strong>鮮度の原則</strong>: 重要情報はコンテキスト後半に配置</li>
+<li><strong>反復検証の原則</strong>: 1度で完成しない・フィードバックループで改善</li>
+</ul>
+<h3>ハーネスエンジニアリング</h3>
+<ul>
+<li>AIエージェントが「正しく動ける環境全体」の設計</li>
+<li>4領域: コンテキスト設計 / データ品質管理 / 出力の自動チェック / Human-in-the-Loop設計</li>
+</ul>
+<h3>試験頻出ポイント</h3>
+<ul>
+<li>出力品質の問題はモデル変更前に「渡している情報」を疑う</li>
+<li>切り分け順序: 情報の欠落 → ノイズ → フォーマット → 最後にモデル変更</li>
+<li>「情報は多く与えるほど良い」は誤解。何を渡さないかの設計も重要</li>
+</ul>
+<h3>自分メモ</h3>
+<pre><code>
+</code></pre>
+<hr>
+<h2>チェックリスト</h2>
+<ul>
+<li><input disabled="" type="checkbox"> 自動化Lv.1〜4の境界を例で説明できる</li>
+<li><input disabled="" type="checkbox"> トリガー3分類・アクション3分類を例示できる</li>
+<li><input disabled="" type="checkbox"> イベントトリガーとWebhookの違いを説明できる</li>
+<li><input disabled="" type="checkbox"> If/Else・ルーティング・フィルタリングを判別できる</li>
+<li><input disabled="" type="checkbox"> エラーハンドリングがIf/Elseの応用であることを理解</li>
+<li><input disabled="" type="checkbox"> プロンプトエンジニアリングとコンテキストエンジニアリングの関係を説明できる</li>
+<li><input disabled="" type="checkbox"> LLMに渡す情報7種類を列挙できる</li>
+<li><input disabled="" type="checkbox"> Write/Select/Compress/Isolateの4手法を理解</li>
+<li><input disabled="" type="checkbox"> 出力品質問題の切り分け順序を言える</li>
 </ul>
 
-<p style="margin-top: 32px; font-size: 13px; color: #9ca3af;">作成中: バリヤード（教科スペシャリスト）→ カイリュー4軸レビュー → ヤドキング最終承認の経路で順次公開。</p>
 </body>
 </html>

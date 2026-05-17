@@ -9,113 +9,278 @@
   h1 { font-size: 22px; border-bottom: 2px solid #60a5fa; padding-bottom: 8px; margin-bottom: 16px; }
   h2 { font-size: 18px; margin-top: 28px; margin-bottom: 12px; color: #60a5fa; }
   h3 { font-size: 15px; margin-top: 16px; margin-bottom: 8px; color: #a78bfa; }
+  h4 { font-size: 14px; margin-top: 12px; margin-bottom: 6px; color: #c0c0c0; }
   blockquote { border-left: 3px solid #60a5fa; padding-left: 12px; margin: 12px 0; color: #9ca3af; }
   table { border-collapse: collapse; width: 100%; margin: 12px 0; }
   th, td { border: 1px solid #3a3a3a; padding: 8px 10px; font-size: 13px; text-align: left; }
   th { background: #2e2e2e; }
   ul, ol { padding-left: 22px; }
   li { margin-bottom: 4px; }
+  code { background: #2e2e2e; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  pre { background: #0e0e0e; border: 1px dashed #3a3a3a; padding: 12px; border-radius: 6px; overflow-x: auto; }
+  pre code { background: none; padding: 0; }
   hr { border: none; border-top: 1px solid #3a3a3a; margin: 24px 0; }
+  input[type="checkbox"] { margin-right: 6px; }
+  strong { color: #f0f0f0; }
 </style>
 </head>
 <body>
 <h1>Ch.03 AIデータリテラシーとマネジメント</h1>
-<blockquote>※ このページは旧3 pillar版の暫定資料です。公式テキストCh.03に沿った内容に近日入れ替え予定。</blockquote>
-
-<h2>3-1. AI前提の評価制度・職務定義</h2>
-<h3>なぜ評価制度の変更が必要か</h3>
+<blockquote>
+<p>公式テキスト Chapter 03 より要約
+セクション数: 7</p>
+</blockquote>
+<hr>
+<h2>3-1. ナレッジマネジメントの基礎</h2>
+<h3>覚えること</h3>
 <ul>
-  <li>従来の評価基準（処理件数・作業時間）がAIで変わる</li>
-  <li>AIを使いこなした人が「サボり」に見えてしまう構造</li>
-  <li>新しい軸: <strong>設計力・改善提案数・AI活用の展開貢献</strong></li>
+<li><strong>情報 vs 知識</strong>: 情報=事実の記述 / 知識=判断の根拠</li>
+<li><strong>暗黙知</strong>: 経験や勘に基づき、言葉や文書として整理されていない知識</li>
+<li><strong>形式知</strong>: 言葉・数値・図表で表現され、文書として共有できる知識</li>
+<li>AIエージェントが参照できるのは<strong>形式知だけ</strong></li>
+<li><strong>ナレッジベース</strong>: 業務マニュアル・FAQ・対応履歴・規程を整理・保存したもの</li>
+<li><strong>ナレッジマネジメント</strong>: 個人に属する知識を整理・共有・活用できる状態にする取り組み</li>
 </ul>
-<h3>職務定義（ジョブディスクリプション）の再設計</h3>
-<table>
-  <tr><th>従来の職務定義</th><th>AI前提の職務定義</th></tr>
-  <tr><td>入力作業・転記・集計</td><td>データ品質管理・例外処理・AI監督</td></tr>
-  <tr><td>問い合わせ対応（全件）</td><td>AI対応のエスカレーション判断</td></tr>
-  <tr><td>報告書作成</td><td>AI出力のレビュー・承認</td></tr>
-</table>
+<h3>暗黙知が形式知化されない理由</h3>
+<ul>
+<li><strong>言語化の困難さ</strong>: 熟練の判断は本人も意識にのぼらない</li>
+<li><strong>知識の囲い込み</strong>: 「自分しか知らない」が価値だと感じる心理的障壁</li>
+</ul>
+<h3>SECIモデル（野中郁次郎）</h3>
+<ul>
+<li><strong>共同化（Socialization）</strong>: 暗黙知→暗黙知（一緒に体験して移転）</li>
+<li><strong>表出化（Externalization）</strong>: 暗黙知→形式知（言語化）</li>
+<li><strong>連結化（Combination）</strong>: 形式知→新たな形式知（組み合わせ）</li>
+<li><strong>内面化（Internalization）</strong>: 形式知→暗黙知（実践で身体化）</li>
+</ul>
+<h3>RAGとファインチューニングの使い分け</h3>
+<ul>
+<li><strong>RAG</strong>: 回答の度に外部ナレッジを参照（料理本を引く）。更新頻度が高い情報に向く</li>
+<li><strong>ファインチューニング</strong>: モデル自体に追加学習（シェフに体で覚えさせる）。自社らしさ・文体・トーンに向く</li>
+<li>知識更新が頻繁な情報には一般にRAGが適している</li>
+<li>両者は組み合わせて使うことが多い</li>
+</ul>
 <h3>試験頻出ポイント</h3>
 <ul>
-  <li><strong>評価制度変更なし → 組織抵抗（C5）が起きる</strong></li>
-  <li>AIを使うことが「評価される」仕組みを先に作る</li>
-  <li>移行期は「使った/使わなかった」ではなく「設計に貢献したか」で評価</li>
+<li>AIエージェントの精度競争は「モデルの性能競争」ではなく「知識の質の競争」に移行</li>
+<li>ナレッジベースの品質がRAG精度を直接左右する</li>
 </ul>
-
+<h3>自分メモ</h3>
+<pre><code>
+</code></pre>
 <hr>
-
-<h2>3-2. チェンジマネジメント</h2>
-<h3>コッターの8ステップ（頻出）</h3>
+<h2>3-2. データの種類と特性</h2>
+<h3>覚えること</h3>
+<ul>
+<li><strong>構造化データ</strong>: テーブル形式（DB・Excel）。検索・集計・比較が容易。従来ITが得意</li>
+<li><strong>非構造化データ</strong>: メール・PDF・画像・音声・動画。企業データの**約80%**を占める。LLMが真価を発揮</li>
+<li><strong>半構造化データ</strong>: JSON・XML・名刺など。完全構造ではないがタグやキーで部分的に整理</li>
+<li><strong>データ種類と処理の担い手</strong>:<ul>
+<li>構造化 → API・定型処理</li>
+<li>非構造化 → LLM</li>
+<li>半構造化 → AIエージェントの入出力インターフェース</li>
+</ul>
+</li>
+</ul>
+<h3>メタデータ</h3>
+<ul>
+<li>「データについてのデータ」。文書本体ではなく属性情報（カテゴリ・対応OS・最終更新日など）</li>
+<li>RAGの検索精度を左右する重要要素</li>
+</ul>
+<h3>試験頻出ポイント</h3>
+<ul>
+<li>非構造化データの処理こそLLMの最大の強み</li>
+<li>同一業務フロー内でも、データ種類ごとに最適な担い手を割り当てる</li>
+<li>典型変換パターン: 非構造化→LLM→半構造化（JSON）→API→構造化</li>
+</ul>
+<h3>自分メモ</h3>
+<pre><code>
+</code></pre>
+<hr>
+<h2>3-3. RAGの仕組み</h2>
+<h3>覚えること</h3>
+<ul>
+<li><strong>RAG（Retrieval-Augmented Generation）</strong>: 検索拡張生成。LLMが知らない情報を必要時に検索して与える仕組み</li>
+<li>RAGはモデルパラメータを更新しない。検索結果をプロンプトに含めるだけ</li>
+</ul>
+<h3>2フェーズ</h3>
+<ul>
+<li><strong>保存フェーズ</strong>: ①チャンク分割 ②ベクトル化 ③インデックス化</li>
+<li><strong>検索・生成フェーズ</strong>: 質問のベクトル化 → セマンティック検索 → 関連チャンクをLLMに渡し回答生成</li>
+<li><strong>セマンティック検索</strong>: キーワード一致でなく意味の近さで検索</li>
+<li><strong>グラウンディング</strong>: 外部文書・データに基づいて回答させる方法</li>
+</ul>
+<h3>チャンク設計</h3>
+<ul>
+<li>大きすぎる → 複数トピックが混在し検索ノイズ</li>
+<li>小さすぎる → 文脈が失われ回答質低下</li>
+<li>目安「1トピック1チャンク」</li>
+</ul>
+<h3>RAG精度を左右する2段階</h3>
+<ul>
+<li><strong>検索の精度</strong>: 関連チャンクが適切に取得できているか</li>
+<li><strong>生成の精度</strong>: チャンク内容に忠実かつ過不足ない回答ができているか</li>
+<li>精度低下時は両者を切り分けて原因特定</li>
+</ul>
+<h3>試験頻出ポイント</h3>
+<ul>
+<li>「検索と生成のどちらに原因があるか」を切り分けて改善</li>
+<li>メタデータの設計が検索精度を大きく左右</li>
+<li>まず動くものを作り、フィードバックで段階的に精度を高める</li>
+</ul>
+<h3>自分メモ</h3>
+<pre><code>
+</code></pre>
+<hr>
+<h2>3-4. AIガバナンスと法務</h2>
+<h3>覚えること</h3>
+<ul>
+<li><strong>AIガバナンス</strong>: AIエージェントの利用・管理・監督に関する体制・ルール・プロセスの総称</li>
+<li><strong>AIポリシー</strong>: 「入力許可データ」と「入力禁止データ」を文書化</li>
+<li>AIポリシーに万社共通の正解は存在しない（業種・データ機密レベル・サービス形態で異なる）</li>
+<li><strong>利用ガイドライン</strong>: ポリシーを日常業務の判断に落とし込んだもの。具体性が肝心</li>
+</ul>
+<h3>法的リスク3領域</h3>
+<ul>
+<li><strong>著作権リスク</strong>: 学習データ・生成物の権利問題</li>
+<li><strong>個人情報保護法リスク</strong>: マスキングや本人同意・安全管理措置が必要</li>
+<li><strong>責任分界点リスク</strong>: AIには法的責任を負わせられない。設計者・承認者・経営者の責任を明文化</li>
+</ul>
+<h3>ストラテジストの橋渡し役</h3>
+<ul>
+<li>技術用語 → 法務向け翻訳が必要</li>
+<li>例: 「RAGで検索」→「社内文書テキストが外部AIサービスに送信される。個人情報・営業秘密が含まれる場合は対応が必要」</li>
+</ul>
+<h3>試験頻出ポイント</h3>
+<ul>
+<li>責任構造はHuman-in-the-Loopで「人間が確認・承認」する設計に落とす</li>
+<li>ガバナンスはリスクを止めるためではなく、許容範囲で安全に活用する土台</li>
+</ul>
+<h3>自分メモ</h3>
+<pre><code>
+</code></pre>
+<hr>
+<h2>3-5. AIエージェントが読みやすいデータを作る</h2>
+<h3>覚えること</h3>
+<ul>
+<li>人間に読みやすい≠AIに読みやすい（セル結合は人にはOK、AIには崩壊）</li>
+<li>原則: 「AIエージェントが見えないものは存在しないのと同じ」</li>
+</ul>
+<h3>7つの習慣</h3>
 <ol>
-  <li><strong>危機感の醸成</strong> - 「なぜ変わる必要があるか」を全員に伝える</li>
-  <li><strong>推進チームの編成</strong> - リーダーシップを持つ変革チームを作る</li>
-  <li><strong>ビジョンの策定</strong> - 変革後の姿を具体化</li>
-  <li><strong>ビジョンの周知</strong> - コミュニケーションを継続的に行う</li>
-  <li><strong>行動できる環境整備</strong> - 障害を取り除く</li>
-  <li><strong>短期成果を作る</strong> - 小さな成功を早期に見せる</li>
-  <li><strong>変革を加速</strong> - 成功を足場に次の変革へ</li>
-  <li><strong>文化への定着</strong> - 新しい行動様式を組織文化に根付かせる</li>
+<li><strong>固有名詞で書く</strong>（「例の件」NG）</li>
+<li><strong>「見た目」より「構造」で作る</strong>（セル結合NG・1セル1データ）</li>
+<li><strong>正しい入力がラクにできる環境</strong>（プルダウン・マスタ参照）</li>
+<li><strong>重要画像に注釈</strong>（スクショにキャプション）</li>
+<li><strong>日付とカテゴリタグを入れる</strong>（メタデータ）</li>
+<li><strong>バージョン管理は履歴機能で</strong>（ファイル名管理NG）</li>
+<li><strong>AIがアクセスできる場所に置く</strong>（SharePoint等）</li>
 </ol>
-<h3>AI導入における抵抗の種類</h3>
-<table>
-  <tr><th>抵抗のタイプ</th><th>原因</th><th>対応策</th></tr>
-  <tr><td>知識不足による不安</td><td>AIが何をするか分からない</td><td>教育・ハンズオン研修</td></tr>
-  <tr><td>仕事を奪われる恐怖</td><td>代替されると誤解</td><td>役割の再定義・成功事例の共有</td></tr>
-  <tr><td>既存利益の保護</td><td>変化で損をする人がいる</td><td>利害関係の調整・インセンティブ設計</td></tr>
-  <tr><td>慣れへの執着</td><td>今のやり方が楽</td><td>段階的移行・サポート体制</td></tr>
-</table>
-
+<h3>AI Readyデータ（Gartner）</h3>
+<ul>
+<li><strong>正確性</strong>: データに矛盾がない</li>
+<li><strong>可視性</strong>: 所在・意味・メタデータ整備</li>
+<li><strong>追跡可能性</strong>: 出所と変更履歴</li>
+<li><strong>安全性</strong>: アクセス制御・プライバシー保護</li>
+<li>Gartner予測: 2026年までにAI Readyデータの不備でAIプロジェクトの60%が中止される</li>
+</ul>
+<h3>既存データの整形範囲</h3>
+<ul>
+<li>「全部きれいにしてからAI導入」では永遠に始まらない</li>
+<li>利用対象範囲から優先的に整形</li>
+<li>過去データ遡及より、今後の記録を新テンプレで蓄積</li>
+</ul>
+<h3>ナレッジベース鮮度管理（4ステップ）</h3>
+<ul>
+<li>変更検知 → 変更箇所の反映 → 古い情報の除外 → 品質確認</li>
+</ul>
+<h3>試験頻出ポイント</h3>
+<ul>
+<li>ハーネスエンジニアリング: AIモデルの賢さでなく「動ける環境設計」で品質が決まる</li>
+<li>AIメタデータ自動付与は人間レビューと組み合わせる（Human-in-the-Loop）</li>
+</ul>
+<h3>自分メモ</h3>
+<pre><code>
+</code></pre>
 <hr>
-
-<h2>3-3. AI推進体制の設計</h2>
-<h3>推進体制の構成要素</h3>
+<h2>3-6. AIプロジェクトの進め方</h2>
+<h3>覚えること</h3>
 <ul>
-  <li><strong>AIオーナー</strong>: 経営層のコミットメント（スポンサー）</li>
-  <li><strong>AIストラテジスト</strong>: 業務・組織設計の担当（本資格が対象）</li>
-  <li><strong>AIアーキテクト</strong>: 技術実装の担当</li>
-  <li><strong>現場チャンピオン</strong>: 各部署でのAI定着促進役</li>
+<li>AIプロジェクト特有の3つの不確実性: <strong>技術面 / 業務適合性 / 効果面</strong></li>
+<li>通常のIT開発は「何を作るか」が決まっており「どう実装するか」が不確実だが、AIでは「そもそも解けるか」が不確実</li>
 </ul>
-<h3>形骸化（C1）を防ぐ仕組み</h3>
+<h3>全体フロー: A実験フェーズ（PoC） → B本運用フェーズ</h3>
 <ul>
-  <li>使用状況の定期モニタリング</li>
-  <li>改善フィードバックループの設計</li>
-  <li>「使わないと困る」仕組みへの組み込み（業務プロセス化）</li>
+<li><strong>判断ゲート</strong>で制御</li>
+<li>AフェーズはPoC失敗・繰り返しが前提（撤退判断も価値ある成果）</li>
 </ul>
-<h3>AIガバナンス</h3>
+<h3>Aフェーズ5ステップ</h3>
+<ol>
+<li><strong>初期相談</strong>: 「やりたいこと」→「解くべき課題」変換</li>
+<li><strong>業務分析・現場視察</strong>: AIプロジェクト最重要工程。観察モード（提案しない）</li>
+<li><strong>提案・スコープ設計</strong>: 一点集中。MVPで最小限から</li>
+<li><strong>モデル開発・MVP開発</strong>: 作り込みすぎない。「検証できる状態」を作る</li>
+<li><strong>効果検証</strong>: 定量・定性両方で判定 → Go / 修正 / 撤退</li>
+</ol>
+<h3>試験頻出ポイント</h3>
 <ul>
-  <li>ポリシー策定: 利用可能なAIツール・禁止事項の明確化</li>
-  <li>リスク管理: 情報漏洩・ハルシネーション・バイアス</li>
-  <li>監査体制: 定期的な利用状況・品質チェック</li>
+<li>ベースライン測定はPoC開始前または同時に行う鉄則</li>
+<li>アジャイル・デザイン思考はAI固有の不確実性に対処しきれない</li>
 </ul>
-
+<h3>自分メモ</h3>
+<pre><code>
+</code></pre>
 <hr>
-
-<h2>3-4. AI時代の人材戦略</h2>
-<h3>リスキリングの考え方</h3>
+<h2>3-7. AIプロジェクトの成功の定義：3層フレームワーク</h2>
+<h3>覚えること</h3>
 <ul>
-  <li>「AIに置き換えられるスキル」より「AIと協働するスキル」を育成</li>
-  <li>全社員向け: AI基礎リテラシー</li>
-  <li>管理職向け: AIを使った業務設計・プロジェクト管理</li>
-  <li>推進者向け: ストラテジスト/アーキテクト資格</li>
+<li><strong>3層フレームワーク</strong>:<ul>
+<li><strong>第1層 効果層</strong>: ビジネスに効果が出ているか（最初に定義）</li>
+<li><strong>第2層 定着層</strong>: 現場の人が使っているか（効果から逆算）</li>
+<li><strong>第3層 精度層</strong>: AIが正しく答えられるか（定着から逆算）</li>
 </ul>
-<h3>組織文化のアップデート</h3>
+</li>
+</ul>
+<h3>重要な二重構造</h3>
 <ul>
-  <li><strong>心理的安全性</strong>: 「AIを試して失敗してもOK」な文化</li>
-  <li><strong>実験文化</strong>: 小さくPoC → 学習 → 展開のサイクル</li>
-  <li><strong>透明性</strong>: AIが何を判断しているか従業員に見える設計</li>
+<li><strong>定義の順序</strong>: トップダウン（効果→定着→精度）</li>
+<li><strong>達成の順序</strong>: ボトムアップ（精度→定着→効果）</li>
 </ul>
-
+<h3>ベースライン測定</h3>
+<ul>
+<li>効果層の最大のミスはベースライン未測定</li>
+<li>PoC開始前に現状値を記録</li>
+</ul>
+<h3>定着層の測定</h3>
+<ul>
+<li>PoC中は定性的代理指標（短期データでは利用率の解釈が困難）</li>
+<li>本運用後は定量指標</li>
+<li>「使いたくない」理由の4分類: 精度不信 / UX問題 / 業務フロー不適合 / 心理的抵抗</li>
+</ul>
+<h3>精度層</h3>
+<ul>
+<li>目標値は逆算で決める（現在の人間水準、現場受容水準、業務上許容リスク）</li>
+<li>業務によって重視指標が異なる: 品質検査=見逃し少（再現率）、スパムフィルタ=誤検知少（適合率）</li>
+</ul>
+<h3>試験頻出ポイント</h3>
+<ul>
+<li>「正答率80%達成＝成功」と判断する罠</li>
+<li>「使いたくない」原因を誤診すると精度ばかり追って解決しない</li>
+</ul>
+<h3>自分メモ</h3>
+<pre><code>
+</code></pre>
 <hr>
-
 <h2>チェックリスト</h2>
 <ul>
-  <li>評価制度をなぜ変える必要があるか説明できる</li>
-  <li>職務定義の変化の具体例を3つ言える</li>
-  <li>コッターの8ステップを順番に言える</li>
-  <li>AI導入抵抗の4タイプと対応策を言える</li>
-  <li>AIガバナンスの3要素を言える</li>
-  <li>リスキリングの3段階（全社員・管理職・推進者）を言える</li>
+<li><input disabled="" type="checkbox"> 暗黙知・形式知・SECIモデル4フェーズを判別できる</li>
+<li><input disabled="" type="checkbox"> 構造化・非構造化・半構造化データの違いを説明できる</li>
+<li><input disabled="" type="checkbox"> RAGの2フェーズと精度問題の切り分け方法を説明できる</li>
+<li><input disabled="" type="checkbox"> AIポリシーの構成要素を列挙できる</li>
+<li><input disabled="" type="checkbox"> AI Readyデータの4特性を言える</li>
+<li><input disabled="" type="checkbox"> AIプロジェクトの5ステップを説明できる</li>
+<li><input disabled="" type="checkbox"> 3層フレームワーク（効果・定着・精度）の二重構造を説明できる</li>
 </ul>
+
 </body>
 </html>

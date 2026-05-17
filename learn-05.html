@@ -9,30 +9,271 @@
   h1 { font-size: 22px; border-bottom: 2px solid #f472b6; padding-bottom: 8px; margin-bottom: 16px; }
   h2 { font-size: 18px; margin-top: 28px; margin-bottom: 12px; color: #f472b6; }
   h3 { font-size: 15px; margin-top: 16px; margin-bottom: 8px; color: #a78bfa; }
+  h4 { font-size: 14px; margin-top: 12px; margin-bottom: 6px; color: #c0c0c0; }
   blockquote { border-left: 3px solid #60a5fa; padding-left: 12px; margin: 12px 0; color: #9ca3af; }
-  .stub-box { background: #2e2e2e; border-left: 4px solid #f472b6; padding: 16px; margin: 24px 0; border-radius: 6px; }
-  .stub-box p { margin: 4px 0; }
-  ul { padding-left: 22px; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+  th, td { border: 1px solid #3a3a3a; padding: 8px 10px; font-size: 13px; text-align: left; }
+  th { background: #2e2e2e; }
+  ul, ol { padding-left: 22px; }
   li { margin-bottom: 4px; }
+  code { background: #2e2e2e; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  pre { background: #0e0e0e; border: 1px dashed #3a3a3a; padding: 12px; border-radius: 6px; overflow-x: auto; }
+  pre code { background: none; padding: 0; }
+  hr { border: none; border-top: 1px solid #3a3a3a; margin: 24px 0; }
+  input[type="checkbox"] { margin-right: 6px; }
+  strong { color: #f0f0f0; }
 </style>
 </head>
 <body>
 <h1>Ch.05 人と組織から考えるAI時代の組織設計</h1>
-<blockquote>公式テキスト第5章。AI前提の組織設計・職務・評価・チェンジマネジメントの章。</blockquote>
-
-<div class="stub-box">
-  <p><strong>準備中</strong></p>
-  <p>このChapterの学習資料は現在作成中です。バリヤード（エデュラボ教材制作）からの成果物（phase-05.md）が完成次第、このページに展開されます。</p>
-</div>
-
-<h2>このChapterで扱う想定トピック</h2>
+<blockquote>
+<p>公式テキスト Chapter 05 より要約
+セクション数: 5</p>
+</blockquote>
+<hr>
+<h2>5-1. AIエージェント導入と組織文化の変革</h2>
+<h3>覚えること</h3>
 <ul>
-  <li>AI前提の職務定義・評価制度</li>
-  <li>人とAIの分業モデル</li>
-  <li>チェンジマネジメント</li>
-  <li>AI時代の組織文化・人材戦略</li>
+<li>従来のITツール（Excel・ERP・RPA）は「道具」だが、AIエージェントは「同僚」に近い</li>
+<li>AIエージェント導入は操作習得ではなく<strong>役割と権限の再定義</strong>を要求</li>
+</ul>
+<h3>デリゲーション（権限委譲）</h3>
+<ul>
+<li>「判断権限の範囲」と「実行権限の範囲」を明確に定義</li>
+<li>いきなり全業務を任せず、リスクが低い定型業務から段階的に拡大</li>
+<li><strong>設計4ステップ</strong>: 業務棚卸し → リスク評価 → デリゲーション範囲決定 → モニタリング/エスカレーション</li>
+</ul>
+<h3>リスクレベルとデリゲーション範囲</h3>
+<ul>
+<li><strong>低リスク</strong>: 判断と実行両方をAIに委譲</li>
+<li><strong>中リスク</strong>: Human-in-the-Loop（AIが判断、人間が承認）</li>
+<li><strong>高リスク</strong>: AIは情報提供のみ、判断は人間</li>
+</ul>
+<h3>文脈依存性</h3>
+<ul>
+<li>同じ「メール送信」でも社内連絡は低リスク、顧客への契約変更通知は高リスク</li>
+<li>文脈依存性を見落とすとデリゲーション設計は形骸化</li>
+</ul>
+<h3>Human-in-the-Loop（HITL）</h3>
+<ul>
+<li>AIエージェントの処理プロセス中に人間の確認・判断・承認を組み込む設計思想</li>
+<li>役割: ①安全装置（誤りを検出・修正）/ ②育成（フィードバックがAI改善データに）</li>
+</ul>
+<h3>試験頻出ポイント</h3>
+<ul>
+<li>「請求書処理全体を自動化する/しない」の二択でなく、ステップ単位で設計</li>
+<li>HITLは「精度が上がれば不要」ではない（顧客対応など本質的に人間確認が価値を持つ場面あり）</li>
+</ul>
+<h3>自分メモ</h3>
+<pre><code>
+</code></pre>
+<hr>
+<h2>5-2. AIエージェント推進の組織類型</h2>
+<h3>覚えること</h3>
+<ul>
+<li><strong>中央集権型</strong>: CoE（Center of Excellence）が全社AI施策を一元管理<ul>
+<li>強み: 統制・ナレッジ集約・野良エージェント防止</li>
+<li>弱み: 遅さ・現場ニーズとのズレ</li>
+<li>向き: 金融・医療など高コンプライアンス業界、大企業</li>
+</ul>
+</li>
+<li><strong>分散型</strong>: 各部署が自律的に推進<ul>
+<li>強み: 速さ・当事者意識・部署特性最適化</li>
+<li>弱み: 統制困難・車輪の再発明・野良増加</li>
+<li>向き: スタートアップ・SaaS企業</li>
+</ul>
+</li>
+<li><strong>ハイブリッド型</strong>: 中央が枠組み・ガイドライン整備、各部署が枠内で自律推進<ul>
+<li>統制と俊敏性のバランス</li>
+<li>段階的展開と相性が良い</li>
+</ul>
+</li>
+</ul>
+<h3>逆転関係</h3>
+<ul>
+<li>中央集権型の強み = 分散型の弱み（その逆も成立）</li>
+<li>試験頻出: 一方のメリットを見たらもう一方のデメリットと即座に対応づける</li>
+</ul>
+<h3>CoEの役割</h3>
+<ol>
+<li><strong>ガバナンス機能</strong>: 全社AI利用ポリシー・セキュリティ基準・データルール</li>
+<li><strong>技術支援機能</strong>: 各部門への助言・ツール選定・設計レビュー</li>
+<li><strong>ナレッジ共有機能</strong>: 成功・失敗事例を全社知見として蓄積</li>
+</ol>
+<h3>試験頻出ポイント</h3>
+<ul>
+<li>「すべての施策にCoE事前承認を義務」はハイブリッド型として不適切（実態は中央集権）</li>
+<li>知見の共有まで承認制にするのはハイブリッド型の根幹を破壊する設計</li>
+</ul>
+<h3>自分メモ</h3>
+<pre><code>
+</code></pre>
+<hr>
+<h2>5-3. 人材評価と指標の再設計</h2>
+<h3>覚えること</h3>
+<ul>
+<li><strong>アウトプット指標</strong>: 活動量（DAU・処理件数）</li>
+<li><strong>アウトカム指標</strong>: 価値（創出時間・解決課題数・従業員満足度）</li>
+<li>アウトプットだけ追うと「使うこと自体が目的化」する形骸化が発生</li>
+<li>KPI設計の中心はアウトカム指標、アウトプットは補助</li>
+</ul>
+<h3>KGI / KPI / OKR</h3>
+<ul>
+<li><strong>KGI</strong>: 最終ゴール（顧客対応コスト年間30%削減）</li>
+<li><strong>KPI</strong>: 中間指標（正答率90%、対応時間50%短縮）</li>
+<li><strong>OKR</strong>: Objective（定性的目標）+ Key Results（定量成果）。探索的・挑戦的目標に適する</li>
+<li>初期フェーズはOKR、本格導入後はKGI/KPIの使い分けが有効</li>
+</ul>
+<h3>KPI設計4ステップ</h3>
+<ol>
+<li>KGI（最終ゴール）を経営層と合意</li>
+<li>KPI（中間指標）3〜5個。アウトカム指標を最低2個含める</li>
+<li>各KPIの計測設計（目標値・方法・頻度・責任者）</li>
+<li>アクションルールの事前設計（KPI未達時に何をするか）</li>
+</ol>
+<h3>KPIの限界 ロングテール課題</h3>
+<ul>
+<li>AIエージェントの真価は「個別には小さくKPI化するほどでない無数の名もなき非効率」の解消</li>
+<li>KPIに現れない価値領域があることを意識する</li>
+</ul>
+<h3>職務定義書（JD）の再設計</h3>
+<ul>
+<li>ハードスキル（ツール操作・定型処理）はAIが代替</li>
+<li>ソフトスキル（問いの設定力・論理的思考力・文脈読解力・関係構築力・倫理的判断力）の重要性が高まる</li>
+</ul>
+<h3>リスキリングとアップスキリング</h3>
+<ul>
+<li><strong>リスキリング</strong>: 職務が代替・変化、新スキルで別職務へ</li>
+<li><strong>アップスキリング</strong>: 現職務継続しつつスキルを追加</li>
+<li>判別の決め手: 職務そのものが変わるか</li>
+</ul>
+<h3>試験頻出ポイント</h3>
+<ul>
+<li>「処理件数200件」だけでは成功判定できない（アウトカム指標必須）</li>
+<li>「仕訳入力者」→「AI監督・例外対応者」は職務名称が変わる＝リスキリング</li>
+<li>AIツールを覚えて経理業務を続ける場合はアップスキリング</li>
+</ul>
+<h3>自分メモ</h3>
+<pre><code>
+</code></pre>
+<hr>
+<h2>5-4. チェンジマネジメント</h2>
+<h3>覚えること</h3>
+<ul>
+<li><strong>チェンジマネジメント</strong>: 組織変革を計画的に推進し、抵抗を小さくして定着を促す</li>
+<li>AIエージェント導入は「自分の仕事が奪われる」実存的不安を引き起こす</li>
+<li>「変化の先に自分の居場所があるか」を示すことが重要</li>
+</ul>
+<h3>抵抗の心理プロセス3段階</h3>
+<ul>
+<li><strong>否認</strong>: 変革の必要性を認めていない（「AIに仕訳なんて無理」）<ul>
+<li>対応: 数値・事例で必要性を示す（認知形成）</li>
+</ul>
+</li>
+<li><strong>抵抗</strong>: 必要性は理解するが感情的に拒否（「自分の仕事がなくなる」）<ul>
+<li>対応: キャリアパス提示、不安を語れる場づくり</li>
+<li>恐怖で動かさない（短期的危機感は長期的抵抗を強める）</li>
+</ul>
+</li>
+<li><strong>受容</strong>: 前向きに試行（「試してみたい」）<ul>
+<li>対応: クイックウィン（小さな成功体験）の積み重ね</li>
+</ul>
+</li>
+</ul>
+<h3>抵抗曲線</h3>
+<ul>
+<li>導入直後にU字型の「谷」（生産性一時低下）が発生するのは正常</li>
+<li>谷を理由に中止判断するのが最大の失敗</li>
+<li>谷を浅く・短くする事前施策（研修・サポート体制・並行運用容認）</li>
+</ul>
+<h3>心理的安全性</h3>
+<ul>
+<li>「率直に発言しても罰せられない信頼関係」（エイミー・エドモンドソン）</li>
+<li>「居心地の良さ」「仲良し」「甘やかし」とは異なる</li>
+<li>高基準と厳しいFBは維持しつつ、人格否定されない</li>
+</ul>
+<h3>Fail-Fast</h3>
+<ul>
+<li>小さく素早く実験し、失敗したら早期に方向転換</li>
+<li>「無計画に突っ込む」とは違う（仮説・検証方法を設計してから）</li>
+<li>心理的安全性が前提（罰せられる環境では誰もリスクを取らない）</li>
+</ul>
+<h3>スモールウィン設計</h3>
+<ul>
+<li>短期間で成果が出る + 成果が定量化できる + 低リスクで実施できる</li>
+<li>採用スクリーニングAIなら「定型フォーマット請求書」から</li>
+<li>逆に難易度が高い対象から始めると「やはり使えない」と抵抗強化</li>
+</ul>
+<h3>試験頻出ポイント</h3>
+<ul>
+<li>否認段階に「使いなさい」と命令しても逆効果</li>
+<li>谷の時期のKPIは「処理速度」でなく「学習進捗」で評価</li>
+<li>心理的安全性が高い環境ではむしろ厳しい指摘や建設的対立が活発</li>
+</ul>
+<h3>自分メモ</h3>
+<pre><code>
+</code></pre>
+<hr>
+<h2>5-5. 5つの問いと答え方</h2>
+<h3>覚えること</h3>
+<ul>
+<li>AIエージェント推進者が現場で必ず直面する5つの問い</li>
+</ul>
+<h3>問い1: 「AIエージェントは間違えるのではないか」</h3>
+<ul>
+<li>発想転換: 「間違えるから使えない」→「<strong>間違え方を設計する</strong>」</li>
+<li>3点セット: 低リスク業務選定 + Human-in-the-Loop + 定量測定で許容範囲判定</li>
+<li>比較対象は「完璧」でなく「現状の人間のミス率」</li>
+</ul>
+<h3>問い2: 「デモではうまく動いていたが本番でも同じ品質か」</h3>
+<ul>
+<li>「デモ通りに動く」と断定しない</li>
+<li>デモと本番の差を正直に伝え、PoCで検証する説明</li>
+<li>PoCは「必ず成功すべき工程」ではない</li>
+</ul>
+<h3>問い3: 「自社データを入れても問題はないのか」</h3>
+<ul>
+<li>IT部門・法務部門の必須問い。回答できずプロジェクトが止まる典型</li>
+<li>核心: 「何のデータを、どこに、どう渡すかを設計で制御できる」</li>
+<li>3要点: マスキング前処理 / クラウドかオンプレか選択 / モデル学習に使われないかの契約制御</li>
+<li>「一緒に確認しましょう」と巻き込む</li>
+</ul>
+<h3>問い4: 「投資対効果（ROI）は見込めるのか」</h3>
+<ul>
+<li>「やってみないとわからない」も「確定値示す」もNG</li>
+<li><strong>前提条件付きROI + 検証計画</strong>をセットで提示</li>
+<li>大きな予算でなく小さなPoC費用への意思決定を求める</li>
+</ul>
+<h3>問い5: 「責任は誰が負うのか」</h3>
+<ul>
+<li>AIエージェントには法的責任を負わせられない</li>
+<li>「すべて人の責任」と伝えると現場抵抗が強まる</li>
+<li>Human-in-the-Loopで「AIが下書き、人間が最終判断」の責任構造</li>
+<li>責任を分解: ルール設計者 / 確認者 / 経営</li>
+</ul>
+<h3>試験頻出ポイント</h3>
+<ul>
+<li>「精度を保証する」のでなく「検証する方法を提示する」</li>
+<li>「大丈夫です」と断言せず「一緒にレビューしましょう」とIT部門を仲間化</li>
+<li>比較対象は常に「現状の人間の水準」</li>
+</ul>
+<h3>自分メモ</h3>
+<pre><code>
+</code></pre>
+<hr>
+<h2>チェックリスト</h2>
+<ul>
+<li><input disabled="" type="checkbox"> デリゲーションの低/中/高リスク区分を例示できる</li>
+<li><input disabled="" type="checkbox"> HITLの2つの役割を説明できる</li>
+<li><input disabled="" type="checkbox"> 中央集権/分散/ハイブリッド型の強み・弱みを言える</li>
+<li><input disabled="" type="checkbox"> アウトプット指標とアウトカム指標を判別できる</li>
+<li><input disabled="" type="checkbox"> KGI/KPI/OKRの区別を理解</li>
+<li><input disabled="" type="checkbox"> リスキリング/アップスキリングを判別できる</li>
+<li><input disabled="" type="checkbox"> 否認/抵抗/受容の段階を発言から判別できる</li>
+<li><input disabled="" type="checkbox"> 抵抗曲線の「谷」の意味を説明できる</li>
+<li><input disabled="" type="checkbox"> 心理的安全性とFail-Fastの関係を説明できる</li>
+<li><input disabled="" type="checkbox"> 5つの問いそれぞれに「伝わる答え方」ができる</li>
 </ul>
 
-<p style="margin-top: 32px; font-size: 13px; color: #9ca3af;">作成中: バリヤード（教科スペシャリスト）→ カイリュー4軸レビュー → ヤドキング最終承認の経路で順次公開。</p>
 </body>
 </html>

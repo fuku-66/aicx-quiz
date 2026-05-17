@@ -9,95 +9,133 @@
   h1 { font-size: 22px; border-bottom: 2px solid #fb923c; padding-bottom: 8px; margin-bottom: 16px; }
   h2 { font-size: 18px; margin-top: 28px; margin-bottom: 12px; color: #fb923c; }
   h3 { font-size: 15px; margin-top: 16px; margin-bottom: 8px; color: #a78bfa; }
+  h4 { font-size: 14px; margin-top: 12px; margin-bottom: 6px; color: #c0c0c0; }
   blockquote { border-left: 3px solid #60a5fa; padding-left: 12px; margin: 12px 0; color: #9ca3af; }
   table { border-collapse: collapse; width: 100%; margin: 12px 0; }
   th, td { border: 1px solid #3a3a3a; padding: 8px 10px; font-size: 13px; text-align: left; }
   th { background: #2e2e2e; }
   ul, ol { padding-left: 22px; }
   li { margin-bottom: 4px; }
+  code { background: #2e2e2e; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  pre { background: #0e0e0e; border: 1px dashed #3a3a3a; padding: 12px; border-radius: 6px; overflow-x: auto; }
+  pre code { background: none; padding: 0; }
   hr { border: none; border-top: 1px solid #3a3a3a; margin: 24px 0; }
+  input[type="checkbox"] { margin-right: 6px; }
+  strong { color: #f0f0f0; }
 </style>
 </head>
 <body>
 <h1>Ch.02 業務の基礎</h1>
-<blockquote>※ このページは旧3 pillar版の暫定資料です。公式テキストCh.02に沿った内容に近日入れ替え予定。</blockquote>
-
-<h2>2-1. 暗黙知の形式知化</h2>
-<h3>SECIモデル</h3>
-<table>
-  <tr><th>フェーズ</th><th>内容</th><th>AI活用ポイント</th></tr>
-  <tr><td>共同化（Socialization）</td><td>体験・観察を通じた暗黙知共有</td><td>ロールプレイAI</td></tr>
-  <tr><td>表出化（Externalization）</td><td>暗黙知 → 言語・図で表現</td><td>AIインタビュー・議事録AI</td></tr>
-  <tr><td>結合化（Combination）</td><td>形式知 × 形式知</td><td>RAGで知識統合</td></tr>
-  <tr><td>内面化（Internalization）</td><td>形式知 → 個人の暗黙知</td><td>AI学習支援</td></tr>
-</table>
-<h3>AIエージェントで形式知化できる業務の特徴</h3>
-<ul>
-  <li>繰り返しパターンがある</li>
-  <li>判断基準が言語化できる</li>
-  <li>入力・出力が明確</li>
-  <li>例外が少ない（or 例外も定義済み）</li>
-</ul>
-
+<blockquote>
+<p>公式テキスト Chapter 02 より要約
+セクション数: 3</p>
+</blockquote>
 <hr>
-
-<h2>2-2. 業務プロセス再設計（BPR）</h2>
-<h3>BPRとは</h3>
-<blockquote>Business Process Reengineering<br>業務プロセスを根本から再設計し、劇的な改善を目指す手法</blockquote>
-<p>「AIを既存プロセスに乗せる」のではなく、<strong>AIが前提の新プロセスを設計する</strong>のがストラテジストの役割。</p>
-<h3>汚い自動化（C4）を避けるために</h3>
+<h2>2-1. 業務の構造的理解</h2>
+<h3>覚えること</h3>
 <ul>
-  <li>非効率なプロセスをそのままAIで高速化 = 「汚い自動化」</li>
-  <li>先にBPRでプロセスを整理してからAI実装</li>
-  <li>チェック: 「このステップは本当に必要か？」「誰が判断すべきか？」</li>
+<li>AIエージェント導入はツール選定から始まらない。<strong>業務構造の理解</strong>から始まる</li>
+<li><strong>3階層の区別</strong>:<ul>
+<li><strong>仕事</strong>: 組織や個人が果たすべき目的・役割の全体</li>
+<li><strong>業務</strong>: 仕事を実現するために組織が繰り返し行う一連の流れ</li>
+<li><strong>作業</strong>: 業務を構成する具体的な行為</li>
 </ul>
-<h3>BPR手順（試験頻出）</h3>
-<ol>
-  <li><strong>現状プロセスのAS-IS分析</strong> → 現在のフロー・ボトルネック・属人化を可視化</li>
-  <li><strong>TO-BE設計</strong> → AIが担う部分・人間が担う部分を区分</li>
-  <li><strong>ギャップ分析</strong> → 移行コスト・リスクを評価</li>
-  <li><strong>段階的実装計画</strong> → PoC→小規模展開→全社展開</li>
-</ol>
-
+</li>
+<li>AIエージェントが直接置き換えるのは「作業」だが、前後の流れを把握しないと適切な設計はできない</li>
+<li><strong>IPOモデル</strong>: Input（入力）/ Process（処理）/ Output（出力）の3要素で業務を捉える</li>
+<li><strong>As-Is分析</strong>: 業務の「現在の姿」をIPO構造で事実だけ記録（改善案を混ぜない）</li>
+<li><strong>To-Be分析</strong>: 業務の「あるべき姿」を設計</li>
+<li><strong>ギャップ分析</strong>: As-IsとTo-Beの差分を明確化</li>
+</ul>
+<h3>As-Is分析の具体的手法</h3>
+<ul>
+<li><strong>プロセスウォークスルー</strong>: 実際の作業を横で観察・記録（ヒアリングだけに頼らない）</li>
+<li><strong>5W1Hヒアリングシート</strong>: Who/What/When/Where/Why/How</li>
+<li><strong>スイムレーン図</strong>: 部署横断業務の可視化</li>
+<li><strong>マニュアルと実態の差分確認</strong>: マニュアル≠実態</li>
+<li><strong>タイムスタディ</strong>: 各作業の実測</li>
+</ul>
+<h3>試験頻出ポイント</h3>
+<ul>
+<li>As-Is分析の段階で改善案を混ぜない（事実の把握と改善議論の混在を避ける）</li>
+<li>「Why」が答えられない工程は廃止候補</li>
+<li><strong>順序</strong>: As-Is → To-Be → ギャップ分析 を厳守</li>
+</ul>
+<h3>自分メモ（fukuが学習中に記入）</h3>
+<pre><code>
+</code></pre>
 <hr>
-
-<h2>2-3. AIが実行可能なワークフロー構築</h2>
-<h3>タスク分解の原則</h3>
+<h2>2-2. BPR（業務改革）の基礎</h2>
+<h3>覚えること</h3>
 <ul>
-  <li>1エージェント = 1責任（Single Responsibility）</li>
-  <li>入力と出力を明確に定義</li>
-  <li>失敗時の回復手順を設計</li>
+<li><strong>BPR（Business Process Reengineering）</strong>: 既存業務を漸進的改善ではなく、根本から問い直して再設計する手法</li>
+<li>「改善（Improvement）」と「再設計（Reengineering）」は発想の出発点が異なる</li>
+<li><strong>「汚いプロセスの自動化」の罠</strong>: 非効率な業務をそのまま自動化すると、非効率を高速で回す装置になるだけ</li>
+<li>ハマーの言葉: 「既存のプロセスを自動化することは、既存の問題を自動化すること」</li>
+<li>AIエージェントが高性能であるほどこの罠の影響は大きい</li>
 </ul>
-<h3>AI適用判断マトリクス</h3>
-<table>
-  <tr><th></th><th>構造化されている</th><th>非構造化</th></tr>
-  <tr><td>高頻度</td><td>最優先AI化候補</td><td>準優先（段階的に）</td></tr>
-  <tr><td>低頻度</td><td>AI化検討</td><td>人間対応を維持</td></tr>
-</table>
-<h3>ヒューマンインザループ（Human-in-the-Loop）</h3>
+<h3>ECRS原則（効果の大きい順）</h3>
 <ul>
-  <li>AIが判断し、人間が承認してから次のステップへ進む設計</li>
-  <li>必要な場面: 高リスク判断・法的効力を持つ書類・感情が絡む顧客対応</li>
-  <li><strong>完全自動化 vs ヒューマンインザループの判断軸</strong>: 失敗コスト × 発生頻度</li>
+<li><strong>Eliminate（排除）</strong>: 「この業務は存在すべきか」を問う → 最も効果大</li>
+<li><strong>Combine（結合）</strong>: 「分かれている理由はあるか」</li>
+<li><strong>Rearrange（順序変更）</strong>: 「この順序に根拠はあるか」</li>
+<li><strong>Simplify（簡素化）</strong>: 「これ以上削ぎ落とせないか」</li>
 </ul>
-<h3>ROI・効果測定</h3>
+<h3>試験頻出ポイント</h3>
 <ul>
-  <li>時間削減量（工数 × 人件費）</li>
-  <li>エラー率の変化</li>
-  <li>処理スピードの向上</li>
-  <li>従業員満足度（残業減・単純作業からの解放）</li>
+<li>順序はEから検討。排除できれば自動化すら不要</li>
+<li>BPRは「全部作り直す」ではなく「プロセスの存在意義を問い続ける姿勢」</li>
+<li>順序: As-Is → BPR（ECRS）→ To-Be 設計</li>
 </ul>
-
+<h3>自分メモ</h3>
+<pre><code>
+</code></pre>
 <hr>
-
+<h2>2-3. 業務可視化の手法</h2>
+<h3>覚えること</h3>
+<ul>
+<li><strong>暗黙知の罠</strong>: 熟練者の判断・手順は本人も言語化できないことが多い</li>
+<li><strong>4つの可視化手法（粗→細）</strong>:<ul>
+<li><strong>IPOモデル</strong>: Input・Process・Outputの3要素で業務の輪郭を掴む</li>
+<li><strong>SIPOC分析</strong>: Supplier・Input・Process・Output・Customer。関係者まで洗い出す</li>
+<li><strong>HTA（Hierarchical Task Analysis）</strong>: 階層的タスク分析。アトミック・タスクまで分解</li>
+<li><strong>業務フロー図（スイムレーン図）</strong>: 最も詳細な可視化。チームの認識統合に最適</li>
+</ul>
+</li>
+</ul>
+<h3>4手法の使い分け</h3>
+<ul>
+<li>全体像を経営層に説明 → IPO + SIPOC</li>
+<li>AIと人間の役割分担を現場と詰める → HTA + 業務フロー図</li>
+<li>必ず全部を使う必要はない。目的に応じて選択</li>
+</ul>
+<h3>HTAでのアトミック・タスク3分類</h3>
+<ul>
+<li><strong>AIエージェント処理</strong>: ルールが明確で繰り返し発生</li>
+<li><strong>定型処理（RPA・スクリプト）</strong>: 判断を伴わない機械的操作</li>
+<li><strong>人間が担う</strong>: 例外判断・倫理判断・高度な文脈理解</li>
+</ul>
+<h3>試験頻出ポイント</h3>
+<ul>
+<li>SIPOCのCustomer洗い出しで「出力受取者の見落とし」を防ぐ（後からの追加要件防止）</li>
+<li>HTAはHuman-in-the-Loop設計と直接つながる</li>
+<li>業務フロー図の価値は「チームの認識統合」</li>
+</ul>
+<h3>自分メモ</h3>
+<pre><code>
+</code></pre>
+<hr>
 <h2>チェックリスト</h2>
 <ul>
-  <li>SECIモデルの4フェーズを説明できる</li>
-  <li>BPRの定義と汚い自動化との違いを言える</li>
-  <li>BPRの4ステップを順番に言える</li>
-  <li>AI適用判断マトリクスで業務を分類できる</li>
-  <li>ヒューマンインザループが必要な場面を言える</li>
-  <li>ROIの測定方法を3つ言える</li>
+<li><input disabled="" type="checkbox"> 仕事・業務・作業の階層を区別できる</li>
+<li><input disabled="" type="checkbox"> IPOで業務の輪郭を描ける</li>
+<li><input disabled="" type="checkbox"> As-Is分析で事実と改善案を混ぜない原則を守れる</li>
+<li><input disabled="" type="checkbox"> ECRSを業務改善案に適用できる</li>
+<li><input disabled="" type="checkbox"> 「汚いプロセスの自動化」の罠を説明できる</li>
+<li><input disabled="" type="checkbox"> 4つの可視化手法を目的別に使い分けられる</li>
+<li><input disabled="" type="checkbox"> HTAでアトミック・タスクを3分類できる</li>
+<li><input disabled="" type="checkbox"> SIPOCのCustomer洗い出しの重要性を説明できる</li>
 </ul>
+
 </body>
 </html>
