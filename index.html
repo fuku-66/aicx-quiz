@@ -91,6 +91,7 @@
     <section id="view-pokedex" class="view" aria-labelledby="pokedex-title">
       <h2 id="pokedex-title" class="view__title">図鑑</h2>
       <div id="pokedex-summary" class="pokedex-summary"></div>
+      <div id="region-tabs" class="region-tabs"></div>
       <div id="pokedex-grid" class="pokedex-grid"></div>
     </section>
 
@@ -155,6 +156,21 @@
     </button>
   </nav>
 </main>
+
+<!-- Pokémon card popup -->
+<div id="poke-card-overlay" class="poke-card-overlay hidden" role="dialog" aria-modal="true">
+  <div class="poke-card-bg" id="poke-card-bg">
+    <button class="poke-card-close" id="poke-card-close" aria-label="閉じる">✕</button>
+    <div class="poke-card__img-wrap">
+      <div id="poke-card-shiny" class="poke-card__shiny hidden">✨ 色違い</div>
+      <img id="poke-card-img" src="" alt="" class="poke-card__img">
+    </div>
+    <div id="poke-card-id" class="poke-card__id"></div>
+    <div id="poke-card-name" class="poke-card__name"></div>
+    <div id="poke-card-types" class="poke-card__types"></div>
+    <button id="poke-card-cry" class="poke-card__cry-btn" type="button">🔊 鳴き声を聞く</button>
+  </div>
+</div>
 
 <!-- Unlock toast -->
 <div id="unlock-overlay" class="unlock-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="unlock-name">
