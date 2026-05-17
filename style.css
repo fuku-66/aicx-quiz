@@ -7,9 +7,12 @@
     --text-secondary: #9AA0A6;
     --accent-success: #5DBB63;
     --accent-combo: #F5A623;
-    --pillar-0: #7C9CFF;
-    --pillar-1: #F5A623;
-    --pillar-2: #9B7CFF;
+    --pillar-0: #4ade80; /* Ch.01 green */
+    --pillar-1: #fb923c; /* Ch.02 orange */
+    --pillar-2: #60a5fa; /* Ch.03 blue */
+    --pillar-3: #c084fc; /* Ch.04 purple */
+    --pillar-4: #f472b6; /* Ch.05 pink */
+    --pillar-5: #facc15; /* Ch.06 yellow */
     --error: #E27D60;
     /* spacing */
     --space-1: 4px;
@@ -43,6 +46,9 @@
     --p0: var(--pillar-0);
     --p1: var(--pillar-1);
     --p2: var(--pillar-2);
+    --p3: var(--pillar-3);
+    --p4: var(--pillar-4);
+    --p5: var(--pillar-5);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -122,13 +128,12 @@
 
   /* ---- Home ---- */
   .home__rings {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--space-3);
-    justify-content: space-between;
     margin-bottom: var(--space-6);
   }
   .ring {
-    flex: 1;
     background: var(--bg-surface);
     border-radius: var(--radius-md);
     padding: var(--space-3);
@@ -144,12 +149,15 @@
   .ring--p0 .ring__fill { stroke: var(--pillar-0); }
   .ring--p1 .ring__fill { stroke: var(--pillar-1); }
   .ring--p2 .ring__fill { stroke: var(--pillar-2); }
+  .ring--p3 .ring__fill { stroke: var(--pillar-3); }
+  .ring--p4 .ring__fill { stroke: var(--pillar-4); }
+  .ring--p5 .ring__fill { stroke: var(--pillar-5); }
   .ring__text {
     position: absolute;
     text-align: center;
   }
-  .ring__pct { font-size: var(--font-xxl); font-weight: 800; }
-  .ring__lbl { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+  .ring__pct { font-size: 22px; font-weight: 800; }
+  .ring__lbl { font-size: 10px; color: var(--text-secondary); margin-top: 2px; }
   .ring-loading { color: var(--text-secondary); padding: var(--space-4); text-align: center; width: 100%; }
 
   .home__cta {
@@ -277,9 +285,12 @@
   .quiz-card { background: var(--bg-surface); border-radius: var(--radius-md); padding: var(--space-4); }
   .quiz-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3); }
   .pillar-tag { font-size: 11px; padding: 4px 10px; border-radius: 12px; font-weight: 600; }
-  .pillar-tag.p0 { background: rgba(124,156,255,0.18); color: var(--pillar-0); }
-  .pillar-tag.p1 { background: rgba(245,166,35,0.18); color: var(--pillar-1); }
-  .pillar-tag.p2 { background: rgba(155,124,255,0.18); color: var(--pillar-2); }
+  .pillar-tag.p0 { background: rgba(74,222,128,0.18); color: var(--pillar-0); }
+  .pillar-tag.p1 { background: rgba(251,146,60,0.18); color: var(--pillar-1); }
+  .pillar-tag.p2 { background: rgba(96,165,250,0.18); color: var(--pillar-2); }
+  .pillar-tag.p3 { background: rgba(192,132,252,0.18); color: var(--pillar-3); }
+  .pillar-tag.p4 { background: rgba(244,114,182,0.18); color: var(--pillar-4); }
+  .pillar-tag.p5 { background: rgba(250,204,21,0.18); color: var(--pillar-5); }
   .quiz-progress { font-size: 12px; color: var(--text-secondary); }
 
   .quiz-question { font-size: var(--font-lg); font-weight: 600; line-height: 1.6; margin-bottom: var(--space-4); }
@@ -330,6 +341,9 @@
   .pillar-fill.p0 { background: var(--pillar-0); }
   .pillar-fill.p1 { background: var(--pillar-1); }
   .pillar-fill.p2 { background: var(--pillar-2); }
+  .pillar-fill.p3 { background: var(--pillar-3); }
+  .pillar-fill.p4 { background: var(--pillar-4); }
+  .pillar-fill.p5 { background: var(--pillar-5); }
   .pillar-rate { font-size: 12px; font-weight: 700; flex: 0 0 50px; text-align: right; }
   .mastered-badge { color: var(--accent-combo); font-size: 11px; margin-left: 4px; }
 
@@ -385,6 +399,9 @@
   .learn__item[data-pillar="01"] { border-left: 4px solid var(--pillar-0); }
   .learn__item[data-pillar="02"] { border-left: 4px solid var(--pillar-1); }
   .learn__item[data-pillar="03"] { border-left: 4px solid var(--pillar-2); }
+  .learn__item[data-pillar="04"] { border-left: 4px solid var(--pillar-3); }
+  .learn__item[data-pillar="05"] { border-left: 4px solid var(--pillar-4); }
+  .learn__item[data-pillar="06"] { border-left: 4px solid var(--pillar-5); }
   .learn__num { font-weight: 800; font-size: var(--font-lg); }
   .learn__name { flex: 1; }
   .learn__sub {

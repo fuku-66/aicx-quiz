@@ -2,7 +2,15 @@
 // GitHub Pages版: fetchはGAS Web AppへCORS越し
 const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbynXSk736sYdLrEes2DDXQXYv6jFE05lPu4P-D5b-NPuypn8P7pepHMXUBtPtYvCwaQ/exec';
 
-const PILLAR_NAMES = ['AIエージェント', '業務設計', '組織設計'];
+const PILLAR_NAMES = [
+  '生成AIとAIエージェントの基礎',
+  '業務の基礎',
+  'AIデータリテラシーとマネジメント',
+  '自動化レベルとワークフロー設計',
+  '人と組織から考えるAI時代の組織設計',
+  'AIエージェントを実装する5Dモデル',
+];
+const PILLAR_SHORT = ['Ch.01','Ch.02','Ch.03','Ch.04','Ch.05','Ch.06'];
 const QUIZ_LIMIT = 20; // architecture.md 準拠
 
 const state = {
@@ -76,7 +84,7 @@ async function loadHome() {
       html += '    <circle class="ring__bg" cx="18" cy="18" r="15.9155"></circle>';
       html += '    <circle class="ring__fill" cx="18" cy="18" r="15.9155" stroke-dasharray="' + pct + ',100"></circle>';
       html += '  </svg>';
-      html += '  <div class="ring__text"><div class="ring__pct">' + pct + '%</div><div class="ring__lbl">P0' + (p.pillar + 1) + '</div></div>';
+      html += '  <div class="ring__text"><div class="ring__pct">' + pct + '%</div><div class="ring__lbl">' + PILLAR_SHORT[p.pillar] + '</div></div>';
       html += '</div>';
     });
     ringsEl.innerHTML = html;
@@ -187,7 +195,7 @@ function renderQuestion() {
   if (!q) { finishSession(); return; }
 
   const tag = document.getElementById('quiz-pillar-tag');
-  tag.textContent = 'P0' + (q.pillar + 1) + ': ' + PILLAR_NAMES[q.pillar];
+  tag.textContent = PILLAR_SHORT[q.pillar] + ': ' + PILLAR_NAMES[q.pillar];
   tag.className = 'pillar-tag p' + q.pillar;
 
   document.getElementById('quiz-progress').textContent = (state.currentIdx + 1) + ' / ' + state.questions.length;
@@ -295,7 +303,7 @@ async function loadStats() {
   d.pillars.forEach(p => {
     const pct = Math.round(p.rate * 100);
     html += '<div class="pillar-row">';
-    html += '<div class="pillar-name">P0' + (p.pillar + 1) + ' ' + PILLAR_NAMES[p.pillar] + '</div>';
+    html += '<div class="pillar-name">' + PILLAR_SHORT[p.pillar] + ' ' + PILLAR_NAMES[p.pillar] + '</div>';
     html += '<div class="pillar-bar"><div class="pillar-fill p' + p.pillar + '" style="width:' + pct + '%"></div></div>';
     html += '<div class="pillar-rate">' + pct + '%' + (p.mastered ? '<span class="mastered-badge">★</span>' : '') + '</div>';
     html += '</div>';
