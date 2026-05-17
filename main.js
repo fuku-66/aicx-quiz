@@ -128,18 +128,41 @@ async function loadHome() {
   const miniEl = document.getElementById('home-calendar-mini');
   if (calRes.status === 'ok') {
     const days = calRes.data;
-    let html = '<div class="cal-mini">';
+    const total = days.reduce((a, d) => a + d.count, 0);
+    const activeDays = days.filter(d => d.count > 0).length;
+
+    // 最初の日の曜日オフセット（0=日）
+    const firstDate = new Date(days[0].date + 'T00:00:00');
+    const firstDow = firstDate.getDay();
+
+    // 曜日ラベル（月・水・金のみ表示してスペース節約）
+    const wdayLabels = ['', '月', '', '水', '', '金', ''];
+    let html = '<div class="cal-mini-wrap">';
+    html += '<div class="cal-wday-labels">';
+    wdayLabels.forEach(lbl => { html += '<span>' + lbl + '</span>'; });
+    html += '</div>';
+
+    html += '<div class="cal-mini">';
+    for (let i = 0; i < firstDow; i++) {
+      html += '<div class="cal-cell" style="background:transparent"></div>';
+    }
     days.forEach(d => {
       let lv = 'l0';
       if (d.count >= 16) lv = 'l4';
       else if (d.count >= 6) lv = 'l3';
+      else if (d.count >= 2) lv = 'l2';
       else if (d.count >= 1) lv = 'l1';
       html += '<div class="cal-cell ' + lv + '" title="' + d.date + ': ' + d.count + '問"></div>';
     });
-    html += '</div>';
-    const total = days.reduce((a, d) => a + d.count, 0);
-    const activeDays = days.filter(d => d.count > 0).length;
+    html += '</div></div>'; // .cal-mini, .cal-mini-wrap
+
     html += '<div class="cal-mini__sub">直近84日 — 学習 ' + activeDays + '日 / 解答 ' + total + '問</div>';
+    html += '<div class="cal-legend"><span>少</span>';
+    ['l1', 'l2', 'l3', 'l4'].forEach(lv => {
+      html += '<div class="cal-legend-cell ' + lv + '"></div>';
+    });
+    html += '<span>多</span></div>';
+
     miniEl.innerHTML = html;
   } else {
     miniEl.textContent = '取得エラー';
@@ -343,7 +366,7 @@ function triggerLabel(t) {
   if (t === 'normal') return '10問正解達成';
   if (t === 'combo3') return '3連コンボ';
   if (t === 'combo5') return '5連コンボ +2';
-  if (t === 'combo10') return '10連コンボ +5';
+  if (t === 'combo10') return '10連コンボ +3';
   if (t && t.indexOf('pillar_master_') === 0) return '分野制覇 伝説';
   if (t === 'all_master') return '全分野制覇 幻';
   return t;
