@@ -21,7 +21,7 @@ const TYPE_JA = {
   steel:'はがね',   fairy:'フェアリー',
 };
 const REGIONS = [
-  {name:'すべて',   min:1,   max:905},
+  {name:'すべて',   min:1,   max:1025},
   {name:'カントー', min:1,   max:151},
   {name:'ジョウト', min:152, max:251},
   {name:'ホウエン', min:252, max:386},
@@ -30,6 +30,7 @@ const REGIONS = [
   {name:'カロス',   min:650, max:721},
   {name:'アローラ', min:722, max:809},
   {name:'ガラル',   min:810, max:905},
+  {name:'パルデア', min:906, max:1025},
 ];
 
 let _regionIdx = 0;
