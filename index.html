@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AICX学習クイズ</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<main class="app-shell" id="app">
+  <!-- Header -->
+  <header class="app-shell__header" role="banner">
+    <h1 id="app-title">AICX学習クイズ</h1>
+  </header>
+
+  <div class="app-shell__main">
+
+    <!-- Home view -->
+    <section id="view-home" class="view view--active" aria-labelledby="home-title">
+      <h2 id="home-title" class="view__title">ホーム</h2>
+
+      <div class="home__rings" id="home-rings">
+        <div class="ring-loading">読み込み中...</div>
+      </div>
+
+      <button id="home-cta" class="home__cta primary-btn" type="button">今日のクイズを始める</button>
+      <div id="home-next-unlock" class="home__next-unlock"></div>
+
+      <section class="home__section" aria-labelledby="home-recent-title">
+        <h3 id="home-recent-title" class="home__section-title">直近の解放</h3>
+        <div id="home-recent-unlocks" class="home__recent-unlocks">読み込み中...</div>
+      </section>
+
+      <section class="home__section" aria-labelledby="home-cal-title">
+        <h3 id="home-cal-title" class="home__section-title">直近12週の学習</h3>
+        <div id="home-calendar-mini" class="home__calendar-mini">読み込み中...</div>
+      </section>
+    </section>
+
+    <!-- Quiz view -->
+    <section id="view-quiz" class="view" aria-labelledby="quiz-title">
+      <h2 id="quiz-title" class="view__title">クイズ</h2>
+
+      <div class="mode-bar">
+        <select id="mode-select" aria-label="モード選択">
+          <option value="normal">通常モード</option>
+          <option value="weak" selected>苦手優先モード</option>
+        </select>
+        <select id="pillar-select" aria-label="分野フィルタ">
+          <option value="">全分野</option>
+          <option value="0">P01: AIエージェント</option>
+          <option value="1">P02: 業務設計</option>
+          <option value="2">P03: 組織設計</option>
+        </select>
+        <button id="start-btn" class="primary-btn" type="button">開始</button>
+      </div>
+
+      <div id="combo-bar" class="combo-bar hidden" aria-live="polite">
+        <span class="combo-label">コンボ</span>
+        <span id="combo-count">0</span>
+      </div>
+
+      <div id="quiz-card" class="quiz-card hidden">
+        <div class="quiz-meta">
+          <span id="quiz-pillar-tag" class="pillar-tag"></span>
+          <span id="quiz-progress" class="quiz-progress"></span>
+        </div>
+        <div id="quiz-question" class="quiz-question"></div>
+        <div id="quiz-choices" class="quiz-choices" role="radiogroup" aria-label="選択肢"></div>
+        <div id="quiz-feedback" class="quiz-feedback hidden" aria-live="polite"></div>
+        <button id="next-btn" class="primary-btn hidden" type="button">次へ</button>
+      </div>
+
+      <div id="quiz-result" class="quiz-result hidden">
+        <h2>セッション終了</h2>
+        <div id="result-summary"></div>
+        <div class="quiz-result__actions">
+          <button id="restart-btn" class="primary-btn" type="button">もう一度</button>
+          <button id="result-home-btn" class="secondary-btn" type="button">ホームへ</button>
+        </div>
+      </div>
+
+      <div id="quiz-loading" class="loading hidden">読み込み中...</div>
+    </section>
+
+    <!-- Pokedex view -->
+    <section id="view-pokedex" class="view" aria-labelledby="pokedex-title">
+      <h2 id="pokedex-title" class="view__title">図鑑</h2>
+      <div id="pokedex-summary" class="pokedex-summary"></div>
+      <div id="pokedex-grid" class="pokedex-grid"></div>
+    </section>
+
+    <!-- Learn (資料) view -->
+    <section id="view-learn" class="view" aria-labelledby="learn-title">
+      <h2 id="learn-title" class="view__title">学習資料</h2>
+      <p class="learn__intro">3つのpillarの解説資料です。新しいタブで開きます。</p>
+      <div class="learn__list">
+        <a class="learn__item" data-pillar="01" href="learn-01.html" target="_blank" rel="noopener">
+          <span class="learn__num">P01</span>
+          <span class="learn__name">AIエージェント</span>
+        </a>
+        <a class="learn__item" data-pillar="02" href="learn-02.html" target="_blank" rel="noopener">
+          <span class="learn__num">P02</span>
+          <span class="learn__name">業務設計</span>
+        </a>
+        <a class="learn__item" data-pillar="03" href="learn-03.html" target="_blank" rel="noopener">
+          <span class="learn__num">P03</span>
+          <span class="learn__name">組織設計</span>
+        </a>
+      </div>
+
+      <h3 class="learn__sub">統計</h3>
+      <div id="stats-content" class="stats-content">読み込み中...</div>
+
+      <h3 class="learn__sub">学習カレンダー(直近365日)</h3>
+      <div id="calendar-summary" class="calendar-summary"></div>
+      <div id="calendar-grid" class="calendar-grid"></div>
+    </section>
+
+  </div>
+
+  <!-- Bottom fixed tabbar (4 tabs) -->
+  <nav class="app-shell__tabbar" role="navigation" aria-label="メイン">
+    <button class="tabbar__btn tabbar__btn--active" data-view="home" type="button" aria-current="page">
+      <span class="tabbar__icon" aria-hidden="true">⌂</span>
+      <span class="tabbar__label">ホーム</span>
+    </button>
+    <button class="tabbar__btn" data-view="quiz" type="button">
+      <span class="tabbar__icon" aria-hidden="true">?</span>
+      <span class="tabbar__label">クイズ</span>
+    </button>
+    <button class="tabbar__btn" data-view="pokedex" type="button">
+      <span class="tabbar__icon" aria-hidden="true">□</span>
+      <span class="tabbar__label">図鑑</span>
+    </button>
+    <button class="tabbar__btn" data-view="learn" type="button">
+      <span class="tabbar__icon" aria-hidden="true">≡</span>
+      <span class="tabbar__label">資料</span>
+    </button>
+  </nav>
+</main>
+
+<!-- Unlock toast -->
+<div id="unlock-overlay" class="unlock-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="unlock-name">
+  <div class="unlock-card">
+    <div class="unlock-label">ポケモン解放</div>
+    <img id="unlock-img" src="" alt="">
+    <div id="unlock-name" class="unlock-name"></div>
+    <div id="unlock-trigger" class="unlock-trigger"></div>
+    <button id="unlock-close" class="primary-btn" type="button">OK</button>
+  </div>
+</div>
+
+<script src="main.js"></script>
+<script src="pokemon.js"></script>
+<script src="calendar.js"></script>
+</body>
+</html>
