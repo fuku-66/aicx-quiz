@@ -95,6 +95,36 @@
       <div id="pokedex-grid" class="pokedex-grid"></div>
     </section>
 
+    <!-- Flashcard (単語帳) view -->
+    <section id="view-flashcard" class="view" aria-labelledby="fc-title">
+      <h2 id="fc-title" class="view__title">単語帳</h2>
+      <div id="fc-chapter-filter" class="fc-chapter-filter"></div>
+      <div id="fc-progress" class="fc-progress"></div>
+      <div id="fc-card" class="fc-card" role="button" tabindex="0" aria-label="カードをタップして意味を確認">
+        <div class="fc-card__inner" id="fc-card-inner">
+          <div class="fc-card__front">
+            <div class="fc-card__chapter" id="fc-chapter-f"></div>
+            <div class="fc-card__term" id="fc-term"></div>
+            <div class="fc-card__reading" id="fc-reading"></div>
+            <div class="fc-card__hint">タップして意味を見る</div>
+          </div>
+          <div class="fc-card__back">
+            <div class="fc-card__chapter" id="fc-chapter-b"></div>
+            <div class="fc-card__fullname" id="fc-fullname"></div>
+            <div class="fc-card__meaning" id="fc-meaning"></div>
+            <div class="fc-card__section" id="fc-section"></div>
+          </div>
+        </div>
+      </div>
+      <div class="fc-controls">
+        <button id="fc-prev" class="secondary-btn" type="button">◀ 前</button>
+        <button id="fc-mastered" class="fc-mastered-btn" type="button">覚えた ✓</button>
+        <button id="fc-next" class="primary-btn" type="button">次へ ▶</button>
+      </div>
+      <div id="fc-mastered-count" class="fc-mastered-count"></div>
+      <div id="fc-loading" class="loading">読み込み中...</div>
+    </section>
+
     <!-- Learn (資料) view -->
     <section id="view-learn" class="view" aria-labelledby="learn-title">
       <h2 id="learn-title" class="view__title">学習資料</h2>
@@ -150,6 +180,10 @@
       <span class="tabbar__icon" aria-hidden="true">□</span>
       <span class="tabbar__label">図鑑</span>
     </button>
+    <button class="tabbar__btn" data-view="flashcard" type="button">
+      <span class="tabbar__icon" aria-hidden="true">≒</span>
+      <span class="tabbar__label">単語帳</span>
+    </button>
     <button class="tabbar__btn" data-view="learn" type="button">
       <span class="tabbar__icon" aria-hidden="true">≡</span>
       <span class="tabbar__label">資料</span>
@@ -186,5 +220,6 @@
 <script src="main.js"></script>
 <script src="pokemon.js"></script>
 <script src="calendar.js"></script>
+<script src="flashcard.js"></script>
 </body>
 </html>

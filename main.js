@@ -59,6 +59,7 @@ function switchView(v) {
   document.querySelectorAll('.view').forEach(s => s.classList.toggle('view--active', s.id === 'view-' + v));
   if (v === 'home') loadHome();
   if (v === 'pokedex') loadPokedex();
+  if (v === 'flashcard') loadFlashcard();
   if (v === 'learn') { loadStats(); loadCalendar(); }
 }
 
