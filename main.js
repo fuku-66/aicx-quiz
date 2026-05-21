@@ -170,28 +170,43 @@ async function loadHome() {
 }
 
 // ---- Quiz flow ----
+let _sessionStarting = false;
+
 async function startSession() {
-  state.questions = [];
-  state.currentIdx = 0;
-  state.sessionAnswered = 0;
-  state.sessionCorrect = 0;
-  document.getElementById('quiz-result').classList.add('hidden');
-  document.getElementById('quiz-loading').classList.remove('hidden');
-  document.getElementById('quiz-card').classList.add('hidden');
+  if (_sessionStarting) return;
+  _sessionStarting = true;
+  try {
+    state.questions = [];
+    state.currentIdx = 0;
+    state.sessionAnswered = 0;
+    state.sessionCorrect = 0;
+    document.getElementById('quiz-result').classList.add('hidden');
+    document.getElementById('quiz-loading').classList.remove('hidden');
+    document.getElementById('quiz-card').classList.add('hidden');
 
-  state.mode = document.getElementById('mode-select').value;
-  state.pillar = document.getElementById('pillar-select').value;
+    state.mode = document.getElementById('mode-select').value;
+    state.pillar = document.getElementById('pillar-select').value;
 
-  const res = await api('getQuestions', { mode: state.mode, pillar: state.pillar, limit: QUIZ_LIMIT });
-  document.getElementById('quiz-loading').classList.add('hidden');
+    let res;
+    try {
+      res = await api('getQuestions', { mode: state.mode, pillar: state.pillar, limit: QUIZ_LIMIT });
+    } catch (e) {
+      document.getElementById('quiz-loading').classList.add('hidden');
+      alert('問題の取得に失敗しました: ' + e);
+      return;
+    }
+    document.getElementById('quiz-loading').classList.add('hidden');
 
-  if (res.status !== 'ok' || !res.data || res.data.length === 0) {
-    alert('問題が取得できなかった: ' + (res.message || '0件'));
-    return;
+    if (!res || res.status !== 'ok' || !res.data || !Array.isArray(res.data) || res.data.length === 0) {
+      alert('問題が取得できなかった: ' + (res && res.message || '0件'));
+      return;
+    }
+    state.questions = res.data;
+    await refreshCombo();
+    renderQuestion();
+  } finally {
+    _sessionStarting = false;
   }
-  state.questions = res.data;
-  await refreshCombo();
-  renderQuestion();
 }
 
 async function refreshCombo() {
@@ -214,9 +229,9 @@ function updateComboBar() {
 
 function renderQuestion() {
   const card = document.getElementById('quiz-card');
-  card.classList.remove('hidden');
   const q = state.questions[state.currentIdx];
   if (!q) { finishSession(); return; }
+  card.classList.remove('hidden');
 
   const tag = document.getElementById('quiz-pillar-tag');
   tag.textContent = PILLAR_SHORT[q.pillar] + ': ' + PILLAR_NAMES[q.pillar];
