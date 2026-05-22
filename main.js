@@ -64,70 +64,84 @@ function switchView(v) {
 }
 
 // ---- Home view ----
+function todayDateStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' +
+    String(d.getMonth() + 1).padStart(2, '0') + '-' +
+    String(d.getDate()).padStart(2, '0');
+}
+
 async function loadHome() {
-  const [collectionRes, calRes] = await Promise.all([
-    api('getCollection'),
-    api('getCalendar', { days: 28 }),
-  ]);
-
-  // 28日棒グラフ
   const barEl = document.getElementById('home-barchart');
-  if (calRes.status === 'ok') {
-    const days = calRes.data;
-    const total = days.reduce((a, d) => a + d.count, 0);
-    const activeDays = days.filter(d => d.count > 0).length;
-    const maxCount = Math.max(...days.map(d => d.count), 1);
-    let html = '<div class="bar-chart">';
-    html += '<div class="bar-chart__bars">';
-    days.forEach((d, i) => {
-      const pct = Math.round((d.count / maxCount) * 100);
-      let lv = 'l0';
-      if (d.count >= 16) lv = 'l4';
-      else if (d.count >= 6) lv = 'l3';
-      else if (d.count >= 2) lv = 'l2';
-      else if (d.count >= 1) lv = 'l1';
-      const dt = new Date(d.date + 'T00:00:00');
-      const mon = (i === 0 || dt.getDate() === 1) ? (dt.getMonth() + 1) + '/' + dt.getDate() : '';
-      const isToday = d.date === new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Tokyo' });
-      const todayClass = isToday ? ' today' : '';
-      html += '<div class="bar-chart__col' + todayClass + '" title="' + d.date + ': ' + d.count + '問">';
-      html += '  <div class="bar-chart__bar-wrap">';
-      html += '    <div class="bar-chart__bar ' + lv + '" style="height:' + (pct || (d.count > 0 ? 4 : 0)) + '%"></div>';
-      html += '  </div>';
-      html += '  <div class="bar-chart__lbl">' + mon + '</div>';
-      html += '</div>';
-    });
-    html += '</div>';
-    html += '<div class="bar-chart__sub">直近28日 — 学習 ' + activeDays + '日 / 解答 ' + total + '問</div>';
-    html += '</div>';
-    barEl.innerHTML = html;
-  } else {
-    barEl.textContent = '取得エラー';
-  }
-
-  // 直近解放3匹
   const recentEl = document.getElementById('home-recent-unlocks');
-  if (collectionRes.status === 'ok') {
-    await ensurePokemonNames();
-    const unlocked = collectionRes.data.unlocked || [];
-    const recent3 = unlocked.slice(-3).reverse();
-    if (recent3.length === 0) {
-      recentEl.innerHTML = '<div class="home__recent-empty">まだ解放されたポケモンはいません。クイズを始めて1匹目を解放しよう。</div>';
-    } else {
-      let html = '';
-      recent3.forEach(u => {
-        html += '<div class="home__recent-cell' + (u.shiny ? ' home__recent-cell--shiny' : '') + '">';
-        html += '  <img src="' + spriteUrl(u.id, u.shiny) + '" alt="" loading="lazy">';
-        html += '  <span class="home__recent-name">#' + String(u.id).padStart(4, '0') + ' ' + getPokemonName(u.id) + '</span>';
+
+  try {
+    const [collectionRes, calRes] = await Promise.all([
+      api('getCollection'),
+      api('getCalendar', { days: 28 }),
+    ]);
+
+    // 28日棒グラフ
+    if (barEl) {
+      if (calRes && calRes.status === 'ok') {
+        const days = calRes.data || [];
+        const total = days.reduce((a, d) => a + (d.count || 0), 0);
+        const activeDays = days.filter(d => d.count > 0).length;
+        const counts = days.map(d => d.count || 0);
+        const maxCount = counts.length ? Math.max.apply(null, counts.concat([1])) : 1;
+        const todayStr = todayDateStr();
+        let html = '<div class="bar-chart"><div class="bar-chart__bars">';
+        days.forEach(function(d, i) {
+          const cnt = d.count || 0;
+          const pct = maxCount > 0 ? Math.round(cnt / maxCount * 100) : 0;
+          let lv = 'l0';
+          if (cnt >= 16) lv = 'l4';
+          else if (cnt >= 6) lv = 'l3';
+          else if (cnt >= 2) lv = 'l2';
+          else if (cnt >= 1) lv = 'l1';
+          const dt = new Date(d.date + 'T00:00:00');
+          const mon = (i === 0 || dt.getDate() === 1) ? (dt.getMonth() + 1) + '/' + dt.getDate() : '';
+          const todayCls = d.date === todayStr ? ' today' : '';
+          const barH = pct > 0 ? pct : (cnt > 0 ? 4 : 0);
+          html += '<div class="bar-chart__col' + todayCls + '" title="' + d.date + ': ' + cnt + '問">';
+          html += '<div class="bar-chart__bar-wrap"><div class="bar-chart__bar ' + lv + '" style="height:' + barH + '%"></div></div>';
+          html += '<div class="bar-chart__lbl">' + mon + '</div></div>';
+        });
         html += '</div>';
-      });
-      html += '<button type="button" class="home__recent-more" id="home-to-pokedex">→ 図鑑へ</button>';
-      recentEl.innerHTML = html;
-      const more = document.getElementById('home-to-pokedex');
-      if (more) more.addEventListener('click', () => switchView('pokedex'));
+        html += '<div class="bar-chart__sub">直近28日 — 学習 ' + activeDays + '日 / 解答 ' + total + '問</div></div>';
+        barEl.innerHTML = html;
+      } else {
+        barEl.textContent = '';
+      }
     }
-  } else {
-    recentEl.textContent = '取得エラー';
+
+    // 直近解放3匹
+    if (recentEl) {
+      if (collectionRes && collectionRes.status === 'ok') {
+        await ensurePokemonNames();
+        const unlocked = (collectionRes.data && collectionRes.data.unlocked) || [];
+        const recent3 = unlocked.slice(-3).reverse();
+        if (recent3.length === 0) {
+          recentEl.innerHTML = '<div class="home__recent-empty">まだ解放されたポケモンはいません。クイズを始めて1匹目を解放しよう。</div>';
+        } else {
+          let html = '';
+          recent3.forEach(function(u) {
+            html += '<div class="home__recent-cell' + (u.shiny ? ' home__recent-cell--shiny' : '') + '">';
+            html += '<img src="' + spriteUrl(u.id, u.shiny) + '" alt="" loading="lazy">';
+            html += '<span class="home__recent-name">#' + String(u.id).padStart(4, '0') + ' ' + getPokemonName(u.id) + '</span></div>';
+          });
+          html += '<button type="button" class="home__recent-more" id="home-to-pokedex">→ 図鑑へ</button>';
+          recentEl.innerHTML = html;
+          const more = document.getElementById('home-to-pokedex');
+          if (more) more.addEventListener('click', function() { switchView('pokedex'); });
+        }
+      } else {
+        recentEl.textContent = '取得エラー';
+      }
+    }
+  } catch (e) {
+    if (barEl) barEl.textContent = 'エラー: ' + e.message;
+    if (recentEl) recentEl.textContent = '';
   }
 }
 
