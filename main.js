@@ -68,10 +68,10 @@ async function loadHome() {
   const [statsRes, collectionRes, calRes] = await Promise.all([
     api('getStats'),
     api('getCollection'),
-    api('getCalendar', { days: 42 }),
+    api('getCalendar', { days: 30 }),
   ]);
 
-  // 直近30日 棒グラフ（円グラフの代わり）
+  // 直近30日 棒グラフ
   const ringsEl = document.getElementById('home-rings');
   if (calRes.status === 'ok') {
     const days = calRes.data;
@@ -101,12 +101,33 @@ async function loadHome() {
     ringsEl.innerHTML = '<div class="ring-loading">読み込み中...</div>';
   }
 
-  // 次の解放まで
-  if (statsRes.status === 'ok') {
+  // 章別正解率グラフ（苦手の可視化）
+  const pillarEl = document.getElementById('home-pillar-bars');
+  if (statsRes.status === 'ok' && pillarEl) {
+    const pillars = statsRes.data.pillars || [];
     const tc = statsRes.data.total_correct || 0;
     const nextRem = 10 - (tc % 10);
     const nextEl = document.getElementById('home-next-unlock');
     if (nextEl) nextEl.textContent = 'あと ' + nextRem + ' 問正解で次のポケモン解放';
+
+    if (pillars.length === 0 || pillars.every(p => (p.total || 0) === 0)) {
+      pillarEl.innerHTML = '<div class="ring-loading">クイズに挑戦すると章別の正解率が表示されます</div>';
+    } else {
+      let html = '';
+      pillars.forEach(p => {
+        const pct = Math.round((p.rate || 0) * 100);
+        const attempts = p.total || 0;
+        const weak = attempts >= 3 && pct < 60;
+        html += '<div class="pillar-row">';
+        html += '<div class="pillar-name">' + PILLAR_SHORT[p.pillar] + '</div>';
+        html += '<div class="pillar-bar"><div class="pillar-fill p' + p.pillar + '" style="width:' + pct + '%"></div></div>';
+        html += '<div class="pillar-rate">' + (attempts === 0 ? '—' : pct + '%') + (weak ? ' 🔴' : p.mastered ? ' ★' : '') + '</div>';
+        html += '</div>';
+      });
+      pillarEl.innerHTML = html;
+    }
+  } else if (pillarEl) {
+    pillarEl.innerHTML = '<div class="ring-loading">読み込み中...</div>';
   }
 
   // 直近解放3匹
@@ -132,45 +153,6 @@ async function loadHome() {
     }
   } else {
     recentEl.textContent = '取得エラー';
-  }
-
-  // 月カレンダー表示
-  const miniEl = document.getElementById('home-calendar-mini');
-  if (calRes.status === 'ok') {
-    const days = calRes.data;
-    const dateMap = {};
-    days.forEach(d => { dateMap[d.date] = d.count; });
-
-    const today = new Date();
-    const y = today.getFullYear(), m = today.getMonth();
-    const firstDay = new Date(y, m, 1);
-    const lastDay = new Date(y, m + 1, 0);
-    const startDow = (firstDay.getDay() + 6) % 7; // 月曜始まり
-
-    const wdays = ['月', '火', '水', '木', '金', '土', '日'];
-    let html = '<div class="cal-month">';
-    html += '<div class="cal-month__title">' + y + '年' + (m + 1) + '月</div>';
-    html += '<div class="cal-month__grid">';
-    wdays.forEach(w => { html += '<div class="cal-month__hd">' + w + '</div>'; });
-
-    for (let i = 0; i < startDow; i++) html += '<div></div>';
-
-    for (let d = 1; d <= lastDay.getDate(); d++) {
-      const iso = y + '-' + String(m + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
-      const cnt = dateMap[iso] || 0;
-      const lv = cnt >= 16 ? 'l4' : cnt >= 6 ? 'l3' : cnt >= 2 ? 'l2' : cnt >= 1 ? 'l1' : 'l0';
-      const isToday = d === today.getDate() ? ' cal-month__day--today' : '';
-      html += '<div class="cal-month__day ' + lv + isToday + '" title="' + iso + ': ' + cnt + '問"><span>' + d + '</span></div>';
-    }
-    html += '</div></div>';
-
-    const total = days.reduce((a, d) => a + d.count, 0);
-    const activeDays = days.filter(d => d.count > 0).length;
-    html += '<div class="cal-mini__sub">直近' + days.length + '日 — 学習 ' + activeDays + '日 / 解答 ' + total + '問</div>';
-
-    miniEl.innerHTML = html;
-  } else {
-    miniEl.textContent = '取得エラー';
   }
 }
 
