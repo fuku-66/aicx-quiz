@@ -613,7 +613,7 @@
   .fc-card {
     perspective: 1200px;
     width: calc(100% - 32px); max-width: 500px;
-    height: 220px; margin: 0 auto 16px; cursor: pointer;
+    height: 380px; margin: 0 auto 16px; cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
   .fc-card__inner {
@@ -640,6 +640,8 @@
     background: linear-gradient(135deg, var(--accent-poke) 0%, var(--accent-poke-dk) 100%);
     color: #fff;
     transform: rotateY(180deg);
+    overflow-y: auto;
+    justify-content: flex-start;
   }
   .fc-card__chapter {
     font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
@@ -666,6 +668,15 @@
   }
   .fc-card__section {
     font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 10px;
+  }
+  .fc-card__image {
+    display: block;
+    max-width: 100%;
+    max-height: 160px;
+    margin: 12px auto 0;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.08);
+    object-fit: contain;
   }
 
   /* コントロールボタン */

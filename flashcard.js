@@ -83,6 +83,17 @@ function renderFlashcard() {
   document.getElementById('fc-meaning').textContent = t.meaning;
   document.getElementById('fc-section').textContent = t.section || '';
 
+  const img = document.getElementById('fc-image');
+  if (img) {
+    if (t.id) {
+      img.src = `images/${t.id}.jpg`;
+      img.style.display = '';
+      img.onerror = () => { img.style.display = 'none'; };
+    } else {
+      img.style.display = 'none';
+    }
+  }
+
   const masteredBtn = document.getElementById('fc-mastered');
   if (isMastered) {
     masteredBtn.textContent = '覚えた ✓';
