@@ -68,66 +68,33 @@ async function loadHome() {
   const [statsRes, collectionRes, calRes] = await Promise.all([
     api('getStats'),
     api('getCollection'),
-    api('getCalendar', { days: 30 }),
+    api('getCalendar', { days: 84 }),
   ]);
 
-  // 直近30日 棒グラフ
+  // pillar rings
   const ringsEl = document.getElementById('home-rings');
-  if (calRes.status === 'ok') {
-    const days = calRes.data;
-    const recent = days.slice(-30);
-    const maxCount = Math.max(...recent.map(d => d.count), 1);
-    const total30 = recent.reduce((a, d) => a + d.count, 0);
-    const active30 = recent.filter(d => d.count > 0).length;
-
-    let html = '<div class="bar-chart">';
-    html += '<div class="bar-chart__bars">';
-    recent.forEach((d, i) => {
-      const pct = Math.round((d.count / maxCount) * 100);
-      const date = new Date(d.date + 'T00:00:00');
-      const lbl = (i % 7 === 0 || i === recent.length - 1)
-        ? (date.getMonth() + 1) + '/' + date.getDate() : '';
-      const lv = d.count >= 16 ? 'l4' : d.count >= 6 ? 'l3' : d.count >= 2 ? 'l2' : d.count >= 1 ? 'l1' : 'l0';
-      html += '<div class="bar-chart__col">';
-      html += '<div class="bar-chart__bar-wrap"><div class="bar-chart__bar ' + lv + '" style="height:' + Math.max(pct, d.count > 0 ? 4 : 0) + '%" title="' + d.date + ': ' + d.count + '問"></div></div>';
-      html += '<div class="bar-chart__lbl">' + lbl + '</div>';
+  if (statsRes.status === 'ok') {
+    const pillars = statsRes.data.pillars || [];
+    let html = '';
+    pillars.forEach(p => {
+      const pct = Math.round((p.rate || 0) * 100);
+      const colorClass = 'ring--p' + p.pillar;
+      html += '<div class="ring ' + colorClass + '">';
+      html += '  <svg class="ring__svg" viewBox="0 0 36 36" aria-hidden="true">';
+      html += '    <circle class="ring__bg" cx="18" cy="18" r="15.9155"></circle>';
+      html += '    <circle class="ring__fill" cx="18" cy="18" r="15.9155" stroke-dasharray="' + pct + ',100"></circle>';
+      html += '  </svg>';
+      html += '  <div class="ring__text"><div class="ring__pct">' + pct + '%</div><div class="ring__lbl">' + PILLAR_SHORT[p.pillar] + '</div></div>';
       html += '</div>';
     });
-    html += '</div>';
-    html += '<div class="bar-chart__sub">直近30日 — 学習 ' + active30 + '日 / 解答 ' + total30 + '問</div>';
-    html += '</div>';
     ringsEl.innerHTML = html;
-  } else {
-    ringsEl.innerHTML = '<div class="ring-loading">読み込み中...</div>';
-  }
 
-  // 章別正解率グラフ（苦手の可視化）
-  const pillarEl = document.getElementById('home-pillar-bars');
-  if (statsRes.status === 'ok' && pillarEl) {
-    const pillars = statsRes.data.pillars || [];
     const tc = statsRes.data.total_correct || 0;
     const nextRem = 10 - (tc % 10);
     const nextEl = document.getElementById('home-next-unlock');
     if (nextEl) nextEl.textContent = 'あと ' + nextRem + ' 問正解で次のポケモン解放';
-
-    if (pillars.length === 0 || pillars.every(p => (p.total || 0) === 0)) {
-      pillarEl.innerHTML = '<div class="ring-loading">クイズに挑戦すると章別の正解率が表示されます</div>';
-    } else {
-      let html = '';
-      pillars.forEach(p => {
-        const pct = Math.round((p.rate || 0) * 100);
-        const attempts = p.total || 0;
-        const weak = attempts >= 3 && pct < 60;
-        html += '<div class="pillar-row">';
-        html += '<div class="pillar-name">' + PILLAR_SHORT[p.pillar] + '</div>';
-        html += '<div class="pillar-bar"><div class="pillar-fill p' + p.pillar + '" style="width:' + pct + '%"></div></div>';
-        html += '<div class="pillar-rate">' + (attempts === 0 ? '—' : pct + '%') + (weak ? ' 🔴' : p.mastered ? ' ★' : '') + '</div>';
-        html += '</div>';
-      });
-      pillarEl.innerHTML = html;
-    }
-  } else if (pillarEl) {
-    pillarEl.innerHTML = '<div class="ring-loading">読み込み中...</div>';
+  } else {
+    ringsEl.innerHTML = '<div class="ring-loading">統計取得エラー</div>';
   }
 
   // 直近解放3匹
@@ -153,6 +120,41 @@ async function loadHome() {
     }
   } else {
     recentEl.textContent = '取得エラー';
+  }
+
+  // 84日草グラフ (mini)
+  const miniEl = document.getElementById('home-calendar-mini');
+  if (calRes.status === 'ok') {
+    const days = calRes.data;
+    const total = days.reduce((a, d) => a + d.count, 0);
+    const activeDays = days.filter(d => d.count > 0).length;
+    const firstDate = new Date(days[0].date + 'T00:00:00');
+    const firstDow = firstDate.getDay();
+    const wdayLabels = ['', '月', '', '水', '', '金', ''];
+    let html = '<div class="cal-mini-wrap">';
+    html += '<div class="cal-wday-labels">';
+    wdayLabels.forEach(lbl => { html += '<span>' + lbl + '</span>'; });
+    html += '</div>';
+    html += '<div class="cal-mini">';
+    for (let i = 0; i < firstDow; i++) {
+      html += '<div class="cal-cell" style="background:transparent"></div>';
+    }
+    days.forEach(d => {
+      let lv = 'l0';
+      if (d.count >= 16) lv = 'l4';
+      else if (d.count >= 6) lv = 'l3';
+      else if (d.count >= 2) lv = 'l2';
+      else if (d.count >= 1) lv = 'l1';
+      html += '<div class="cal-cell ' + lv + '" title="' + d.date + ': ' + d.count + '問"></div>';
+    });
+    html += '</div></div>';
+    html += '<div class="cal-mini__sub">直近84日 — 学習 ' + activeDays + '日 / 解答 ' + total + '問</div>';
+    html += '<div class="cal-legend"><span>少</span>';
+    ['l1', 'l2', 'l3', 'l4'].forEach(lv => { html += '<div class="cal-legend-cell ' + lv + '"></div>'; });
+    html += '<span>多</span></div>';
+    miniEl.innerHTML = html;
+  } else {
+    miniEl.textContent = '取得エラー';
   }
 }
 
