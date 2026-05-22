@@ -144,8 +144,9 @@
 
   /* ---- Home ---- */
   /* 棒グラフ（ホーム） */
-  .home__rings { margin-bottom: var(--space-6); }
+  .home__barchart { margin-bottom: var(--space-6); }
   .bar-chart { width: 100%; }
+  .bar-chart__col.today .bar-chart__bar { outline: 2px solid var(--primary); outline-offset: 1px; }
   .bar-chart__bars {
     display: flex; align-items: flex-end; gap: 2px;
     height: 80px; padding-bottom: 18px; position: relative;

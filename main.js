@@ -65,36 +65,44 @@ function switchView(v) {
 
 // ---- Home view ----
 async function loadHome() {
-  const [statsRes, collectionRes, calRes] = await Promise.all([
-    api('getStats'),
+  const [collectionRes, calRes] = await Promise.all([
     api('getCollection'),
-    api('getCalendar', { days: 84 }),
+    api('getCalendar', { days: 28 }),
   ]);
 
-  // pillar rings
-  const ringsEl = document.getElementById('home-rings');
-  if (statsRes.status === 'ok') {
-    const pillars = statsRes.data.pillars || [];
-    let html = '';
-    pillars.forEach(p => {
-      const pct = Math.round((p.rate || 0) * 100);
-      const colorClass = 'ring--p' + p.pillar;
-      html += '<div class="ring ' + colorClass + '">';
-      html += '  <svg class="ring__svg" viewBox="0 0 36 36" aria-hidden="true">';
-      html += '    <circle class="ring__bg" cx="18" cy="18" r="15.9155"></circle>';
-      html += '    <circle class="ring__fill" cx="18" cy="18" r="15.9155" stroke-dasharray="' + pct + ',100"></circle>';
-      html += '  </svg>';
-      html += '  <div class="ring__text"><div class="ring__pct">' + pct + '%</div><div class="ring__lbl">' + PILLAR_SHORT[p.pillar] + '</div></div>';
+  // 28日棒グラフ
+  const barEl = document.getElementById('home-barchart');
+  if (calRes.status === 'ok') {
+    const days = calRes.data;
+    const total = days.reduce((a, d) => a + d.count, 0);
+    const activeDays = days.filter(d => d.count > 0).length;
+    const maxCount = Math.max(...days.map(d => d.count), 1);
+    let html = '<div class="bar-chart">';
+    html += '<div class="bar-chart__bars">';
+    days.forEach((d, i) => {
+      const pct = Math.round((d.count / maxCount) * 100);
+      let lv = 'l0';
+      if (d.count >= 16) lv = 'l4';
+      else if (d.count >= 6) lv = 'l3';
+      else if (d.count >= 2) lv = 'l2';
+      else if (d.count >= 1) lv = 'l1';
+      const dt = new Date(d.date + 'T00:00:00');
+      const mon = (i === 0 || dt.getDate() === 1) ? (dt.getMonth() + 1) + '/' + dt.getDate() : '';
+      const isToday = d.date === new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Tokyo' });
+      const todayClass = isToday ? ' today' : '';
+      html += '<div class="bar-chart__col' + todayClass + '" title="' + d.date + ': ' + d.count + '問">';
+      html += '  <div class="bar-chart__bar-wrap">';
+      html += '    <div class="bar-chart__bar ' + lv + '" style="height:' + (pct || (d.count > 0 ? 4 : 0)) + '%"></div>';
+      html += '  </div>';
+      html += '  <div class="bar-chart__lbl">' + mon + '</div>';
       html += '</div>';
     });
-    ringsEl.innerHTML = html;
-
-    const tc = statsRes.data.total_correct || 0;
-    const nextRem = 10 - (tc % 10);
-    const nextEl = document.getElementById('home-next-unlock');
-    if (nextEl) nextEl.textContent = 'あと ' + nextRem + ' 問正解で次のポケモン解放';
+    html += '</div>';
+    html += '<div class="bar-chart__sub">直近28日 — 学習 ' + activeDays + '日 / 解答 ' + total + '問</div>';
+    html += '</div>';
+    barEl.innerHTML = html;
   } else {
-    ringsEl.innerHTML = '<div class="ring-loading">統計取得エラー</div>';
+    barEl.textContent = '取得エラー';
   }
 
   // 直近解放3匹
@@ -120,41 +128,6 @@ async function loadHome() {
     }
   } else {
     recentEl.textContent = '取得エラー';
-  }
-
-  // 84日草グラフ (mini)
-  const miniEl = document.getElementById('home-calendar-mini');
-  if (calRes.status === 'ok') {
-    const days = calRes.data;
-    const total = days.reduce((a, d) => a + d.count, 0);
-    const activeDays = days.filter(d => d.count > 0).length;
-    const firstDate = new Date(days[0].date + 'T00:00:00');
-    const firstDow = firstDate.getDay();
-    const wdayLabels = ['', '月', '', '水', '', '金', ''];
-    let html = '<div class="cal-mini-wrap">';
-    html += '<div class="cal-wday-labels">';
-    wdayLabels.forEach(lbl => { html += '<span>' + lbl + '</span>'; });
-    html += '</div>';
-    html += '<div class="cal-mini">';
-    for (let i = 0; i < firstDow; i++) {
-      html += '<div class="cal-cell" style="background:transparent"></div>';
-    }
-    days.forEach(d => {
-      let lv = 'l0';
-      if (d.count >= 16) lv = 'l4';
-      else if (d.count >= 6) lv = 'l3';
-      else if (d.count >= 2) lv = 'l2';
-      else if (d.count >= 1) lv = 'l1';
-      html += '<div class="cal-cell ' + lv + '" title="' + d.date + ': ' + d.count + '問"></div>';
-    });
-    html += '</div></div>';
-    html += '<div class="cal-mini__sub">直近84日 — 学習 ' + activeDays + '日 / 解答 ' + total + '問</div>';
-    html += '<div class="cal-legend"><span>少</span>';
-    ['l1', 'l2', 'l3', 'l4'].forEach(lv => { html += '<div class="cal-legend-cell ' + lv + '"></div>'; });
-    html += '<span>多</span></div>';
-    miniEl.innerHTML = html;
-  } else {
-    miniEl.textContent = '取得エラー';
   }
 }
 
