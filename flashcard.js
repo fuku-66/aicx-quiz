@@ -84,13 +84,19 @@ function renderFlashcard() {
   document.getElementById('fc-section').textContent = t.section || '';
 
   const img = document.getElementById('fc-image');
+  const meaningEl = document.getElementById('fc-meaning');
   if (img) {
     if (t.id) {
       img.src = `images/${t.id}.jpg`;
       img.style.display = '';
-      img.onerror = () => { img.style.display = 'none'; };
+      img.onerror = () => {
+        img.style.display = 'none';
+        if (meaningEl) meaningEl.style.display = '';
+      };
+      if (meaningEl) meaningEl.style.display = 'none';
     } else {
       img.style.display = 'none';
+      if (meaningEl) meaningEl.style.display = '';
     }
   }
 
