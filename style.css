@@ -612,8 +612,9 @@
   /* フラッシュカード本体 */
   .fc-card {
     perspective: 1200px;
-    width: calc(100% - 32px); max-width: 500px;
-    height: 460px; margin: 0 auto 16px; cursor: pointer;
+    width: calc(100% - 32px); max-width: 640px;
+    aspect-ratio: 16 / 9;
+    margin: 0 auto 16px; cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
   .fc-card__inner {

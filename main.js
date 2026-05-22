@@ -384,6 +384,7 @@ function triggerLabel(t) {
   if (t === 'combo10') return '10連コンボ +3';
   if (t && t.indexOf('pillar_master_') === 0) return '分野制覇 伝説';
   if (t === 'all_master') return '全分野制覇 幻';
+  if (t && t.indexOf('fc_mastered_') === 0) return '単語帳 ' + t.slice('fc_mastered_'.length) + '語達成';
   return t;
 }
 

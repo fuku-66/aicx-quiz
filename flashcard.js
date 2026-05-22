@@ -146,15 +146,27 @@ function initFlashcardEvents() {
     renderFlashcard();
   });
 
-  document.getElementById('fc-mastered').addEventListener('click', e => {
+  document.getElementById('fc-mastered').addEventListener('click', async e => {
     e.stopPropagation();
     if (_fcFiltered.length === 0) return;
     const t = _fcFiltered[_fcIndex];
     const mastered = getMastered();
+    const wasNew = !mastered.has(t.id);
     if (mastered.has(t.id)) mastered.delete(t.id);
     else mastered.add(t.id);
     setMastered(mastered);
     renderFlashcard();
+
+    // 全単語帳から覚えた数を取得し、3の倍数到達時にポケモン解放
+    if (wasNew) {
+      const totalMastered = mastered.size;
+      if (totalMastered > 0 && totalMastered % 3 === 0) {
+        const res = await api('recordFlashcardMastered', { mastered_count: totalMastered }, 'POST');
+        if (res.status === 'ok' && res.data.newly_unlocked && res.data.newly_unlocked.length > 0) {
+          if (typeof showUnlocks === 'function') showUnlocks(res.data.newly_unlocked);
+        }
+      }
+    }
   });
 }
 
