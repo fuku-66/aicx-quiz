@@ -226,12 +226,7 @@ function renderFlashcard() {
   document.getElementById('fc-meaning').textContent = t.meaning;
   document.getElementById('fc-chapter-f').textContent = t.chapter;
 
-  // 裏面: 単語・画像を表示
-  document.getElementById('fc-term').textContent = t.term;
-  document.getElementById('fc-reading').textContent = t.reading ? `（${t.reading}）` : '';
-  document.getElementById('fc-fullname').textContent = t.fullName || '';
-  document.getElementById('fc-chapter-b').textContent = t.chapter;
-
+  // 裏面: 画像のみ
   const img = document.getElementById('fc-image');
   if (img) {
     img.src = `images/${t.id}.jpg`;
