@@ -683,6 +683,11 @@
   }
   .fc-card__fullname { display: none; }
   .fc-card__meaning  { display: none; }
+  .fc-card__front .fc-card__meaning {
+    display: block;
+    font-size: 14px; font-weight: 600; line-height: 1.6;
+    color: var(--text-primary);
+  }
   .fc-card__section  { display: none; }
   .fc-card__back .fc-card__chapter { display: none; }
   .fc-card__image {
