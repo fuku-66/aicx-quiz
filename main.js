@@ -119,8 +119,8 @@ async function loadHome() {
     if (recentEl) {
       if (collectionRes && collectionRes.status === 'ok') {
         await ensurePokemonNames();
-        const unlocked = (collectionRes.data && collectionRes.data.unlocked) || [];
-        const recent3 = unlocked.slice(-3).reverse();
+        const recent3 = (collectionRes.data && collectionRes.data.recent_unlocked) ||
+          ((collectionRes.data && collectionRes.data.unlocked) || []).slice(-3).reverse();
         if (recent3.length === 0) {
           recentEl.innerHTML = '<div class="home__recent-empty">まだ解放されたポケモンはいません。クイズを始めて1匹目を解放しよう。</div>';
         } else {
