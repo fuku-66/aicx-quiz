@@ -143,7 +143,8 @@
   }
 
   /* ---- Home ---- */
-  /* 棒グラフ（ホーム） */
+  /* 統計 + 棒グラフ（ホーム） */
+  .home__stats { margin-bottom: var(--space-6); }
   .home__barchart { margin-bottom: var(--space-6); }
   .bar-chart { width: 100%; }
   .bar-chart__col.today .bar-chart__bar { outline: 2px solid var(--primary); outline-offset: 1px; }

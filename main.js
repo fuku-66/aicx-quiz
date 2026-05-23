@@ -60,7 +60,7 @@ function switchView(v) {
   if (v === 'home') loadHome();
   if (v === 'pokedex') loadPokedex();
   if (v === 'flashcard') loadFlashcard();
-  if (v === 'learn') { loadStats(); loadCalendar(); }
+  if (v === 'learn') { loadCalendar(); }
 }
 
 // ---- Home view ----
@@ -143,6 +143,8 @@ async function loadHome() {
     if (barEl) barEl.textContent = 'エラー: ' + e.message;
     if (recentEl) recentEl.textContent = '';
   }
+  // 統計は独立ロード（遅くても棒グラフ・解放を止めない）
+  loadStats();
 }
 
 // ---- Quiz flow ----
@@ -301,7 +303,8 @@ function finishSession() {
 
 // ---- Stats view (資料タブ内) ----
 async function loadStats() {
-  const el = document.getElementById('stats-content');
+  const el = document.getElementById('home-stats');
+  if (!el) return;
   el.innerHTML = '<div class="loading">読み込み中...</div>';
   const res = await api('getStats');
   if (res.status !== 'ok') { el.textContent = 'エラー: ' + res.message; return; }
