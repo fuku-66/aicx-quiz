@@ -66,125 +66,87 @@ function switchView(v) {
 // ---- Home view ----
 function todayDateStr() {
   const d = new Date();
-  return d.getFullYear() + '-' +
-    String(d.getMonth() + 1).padStart(2, '0') + '-' +
-    String(d.getDate()).padStart(2, '0');
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 }
 
 async function loadHome() {
-  const barEl = document.getElementById('home-barchart');
+  const barEl    = document.getElementById('home-barchart');
   const recentEl = document.getElementById('home-recent-unlocks');
+  const nextEl   = document.getElementById('home-next-unlock');
 
-  try {
-    const [collectionRes, calRes] = await Promise.all([
-      api('getCollection'),
-      api('getCalendar', { days: 28 }),
-    ]);
+  const [collectionRes, calRes] = await Promise.all([
+    api('getCollection'),
+    api('getCalendar', { days: 14 }),
+  ]);
 
-    // 28日棒グラフ
-    if (barEl) {
-      if (calRes && calRes.status === 'ok') {
-        const days = calRes.data || [];
-        const total = days.reduce((a, d) => a + (d.count || 0), 0);
-        const activeDays = days.filter(d => d.count > 0).length;
-        const counts = days.map(d => d.count || 0);
-        const maxCount = counts.length ? Math.max.apply(null, counts.concat([1])) : 1;
-        const todayStr = todayDateStr();
-        let html = '<div class="bar-chart"><div class="bar-chart__bars">';
-        days.forEach(function(d, i) {
-          const cnt = d.count || 0;
-          const pct = maxCount > 0 ? Math.round(cnt / maxCount * 100) : 0;
-          let lv = 'l0';
-          if (cnt >= 16) lv = 'l4';
-          else if (cnt >= 6) lv = 'l3';
-          else if (cnt >= 2) lv = 'l2';
-          else if (cnt >= 1) lv = 'l1';
-          const dt = new Date(d.date + 'T00:00:00');
-          const mon = (i === 0 || dt.getDate() === 1) ? (dt.getMonth() + 1) + '/' + dt.getDate() : '';
-          const todayCls = d.date === todayStr ? ' today' : '';
-          const barH = pct > 0 ? pct : (cnt > 0 ? 4 : 0);
-          html += '<div class="bar-chart__col' + todayCls + '" title="' + d.date + ': ' + cnt + '問">';
-          html += '<div class="bar-chart__bar-wrap"><div class="bar-chart__bar ' + lv + '" style="height:' + barH + '%"></div></div>';
-          html += '<div class="bar-chart__lbl">' + mon + '</div></div>';
-        });
-        html += '</div>';
-        html += '<div class="bar-chart__sub">直近28日 — 学習 ' + activeDays + '日 / 解答 ' + total + '問</div></div>';
-        barEl.innerHTML = html;
-      } else {
-        barEl.textContent = '';
-      }
-    }
-
-    // 直近解放3匹
-    if (recentEl) {
-      if (collectionRes && collectionRes.status === 'ok') {
-        await ensurePokemonNames();
-        const recent3 = (collectionRes.data && collectionRes.data.recent_unlocked) ||
-          ((collectionRes.data && collectionRes.data.unlocked) || []).slice(-3).reverse();
-        if (recent3.length === 0) {
-          recentEl.innerHTML = '<div class="home__recent-empty">まだ解放されたポケモンはいません。クイズを始めて1匹目を解放しよう。</div>';
-        } else {
-          let html = '';
-          recent3.forEach(function(u) {
-            html += '<div class="home__recent-cell' + (u.shiny ? ' home__recent-cell--shiny' : '') + '">';
-            html += '<img src="' + spriteUrl(u.id, u.shiny) + '" alt="" loading="lazy">';
-            html += '<span class="home__recent-name">#' + String(u.id).padStart(4, '0') + ' ' + getPokemonName(u.id) + '</span></div>';
-          });
-          html += '<button type="button" class="home__recent-more" id="home-to-pokedex">→ 図鑑へ</button>';
-          recentEl.innerHTML = html;
-          const more = document.getElementById('home-to-pokedex');
-          if (more) more.addEventListener('click', function() { switchView('pokedex'); });
-        }
-      } else {
-        recentEl.textContent = '取得エラー';
-      }
-    }
-  } catch (e) {
-    if (barEl) barEl.textContent = 'エラー: ' + e.message;
-    if (recentEl) recentEl.textContent = '';
+  // 28日棒グラフ（buildBarChart を calendar.js から流用）
+  if (barEl && calRes && calRes.status === 'ok') {
+    const days = calRes.data || [];
+    const total = days.reduce((a, d) => a + (d.count||0), 0);
+    const activeDays = days.filter(d => d.count > 0).length;
+    barEl.innerHTML = buildBarChart(days, 14) +
+      '<div class="bar-chart__sub">直近14日 — 学習 ' + activeDays + '日 / 解答 ' + total + '問</div>';
   }
-  // 統計は独立ロード（遅くても棒グラフ・解放を止めない）
+
+  // 直近解放3匹
+  if (recentEl && collectionRes && collectionRes.status === 'ok') {
+    await ensurePokemonNames();
+    const recent3 = (collectionRes.data.recent_unlocked) ||
+      (collectionRes.data.unlocked || []).slice(-3).reverse();
+    if (recent3.length === 0) {
+      recentEl.innerHTML = '<div class="home__recent-empty">まだ解放されたポケモンはいません。クイズを始めて1匹目を解放しよう。</div>';
+    } else {
+      let html = '';
+      recent3.forEach(u => {
+        html += '<div class="home__recent-cell' + (u.shiny ? ' home__recent-cell--shiny' : '') + '">';
+        html += '<img src="' + spriteUrl(u.id, u.shiny) + '" alt="" loading="lazy">';
+        html += '<span class="home__recent-name">#' + String(u.id).padStart(4,'0') + ' ' + getPokemonName(u.id) + '</span></div>';
+      });
+      html += '<button type="button" class="home__recent-more" id="home-to-pokedex">→ 図鑑へ</button>';
+      recentEl.innerHTML = html;
+      const more = document.getElementById('home-to-pokedex');
+      if (more) more.addEventListener('click', () => switchView('pokedex'));
+    }
+  }
+
+  // 統計（解答数・正解数・pillar別正答率）
   loadStats();
 }
 
-// ---- Quiz flow ----
-let _sessionStarting = false;
-
-async function startSession() {
-  if (_sessionStarting) return;
-  _sessionStarting = true;
-  try {
-    state.questions = [];
-    state.currentIdx = 0;
-    state.sessionAnswered = 0;
-    state.sessionCorrect = 0;
-    document.getElementById('quiz-result').classList.add('hidden');
-    document.getElementById('quiz-loading').classList.remove('hidden');
-    document.getElementById('quiz-card').classList.add('hidden');
-
-    state.mode = document.getElementById('mode-select').value;
-    state.pillar = document.getElementById('pillar-select').value;
-
-    let res;
-    try {
-      res = await api('getQuestions', { mode: state.mode, pillar: state.pillar, limit: QUIZ_LIMIT });
-    } catch (e) {
-      document.getElementById('quiz-loading').classList.add('hidden');
-      alert('問題の取得に失敗しました: ' + e);
-      return;
-    }
-    document.getElementById('quiz-loading').classList.add('hidden');
-
-    if (!res || res.status !== 'ok' || !res.data || !Array.isArray(res.data) || res.data.length === 0) {
-      alert('問題が取得できなかった: ' + (res && res.message || '0件'));
-      return;
-    }
-    state.questions = res.data;
-    await refreshCombo();
-    renderQuestion();
-  } finally {
-    _sessionStarting = false;
+// 次解放リマインダーを別途更新（getStats取得後）
+async function updateNextUnlock() {
+  const nextEl = document.getElementById('home-next-unlock');
+  if (!nextEl) return;
+  const res = await api('getStats');
+  if (res.status === 'ok') {
+    const tc = res.data.total_correct || 0;
+    nextEl.textContent = 'あと ' + (10 - (tc % 10)) + ' 問正解で次のポケモン解放';
   }
+}
+
+// ---- Quiz flow ----
+async function startSession() {
+  state.questions = [];
+  state.currentIdx = 0;
+  state.sessionAnswered = 0;
+  state.sessionCorrect = 0;
+  document.getElementById('quiz-result').classList.add('hidden');
+  document.getElementById('quiz-loading').classList.remove('hidden');
+  document.getElementById('quiz-card').classList.add('hidden');
+
+  state.mode = document.getElementById('mode-select').value;
+  state.pillar = document.getElementById('pillar-select').value;
+
+  const res = await api('getQuestions', { mode: state.mode, pillar: state.pillar, limit: QUIZ_LIMIT });
+  document.getElementById('quiz-loading').classList.add('hidden');
+
+  if (res.status !== 'ok' || !res.data || res.data.length === 0) {
+    alert('問題が取得できなかった: ' + (res.message || '0件'));
+    return;
+  }
+  state.questions = res.data;
+  await refreshCombo();
+  renderQuestion();
 }
 
 async function refreshCombo() {
@@ -207,9 +169,9 @@ function updateComboBar() {
 
 function renderQuestion() {
   const card = document.getElementById('quiz-card');
+  card.classList.remove('hidden');
   const q = state.questions[state.currentIdx];
   if (!q) { finishSession(); return; }
-  card.classList.remove('hidden');
 
   const tag = document.getElementById('quiz-pillar-tag');
   tag.textContent = PILLAR_SHORT[q.pillar] + ': ' + PILLAR_NAMES[q.pillar];
@@ -301,10 +263,9 @@ function finishSession() {
     '正答率 ' + Math.round(state.sessionCorrect / Math.max(1, state.sessionAnswered) * 100) + '%';
 }
 
-// ---- Stats view (資料タブ内) ----
+// ---- Stats（ホーム画面） ----
 async function loadStats() {
   const el = document.getElementById('home-stats');
-  if (!el) return;
   el.innerHTML = '<div class="loading">読み込み中...</div>';
   const res = await api('getStats');
   if (res.status !== 'ok') { el.textContent = 'エラー: ' + res.message; return; }
@@ -360,10 +321,9 @@ function triggerLabel(t) {
   if (t === 'normal') return '10問正解達成';
   if (t === 'combo3') return '3連コンボ';
   if (t === 'combo5') return '5連コンボ +2';
-  if (t === 'combo10') return '10連コンボ +3';
+  if (t === 'combo10') return '10連コンボ +5';
   if (t && t.indexOf('pillar_master_') === 0) return '分野制覇 伝説';
   if (t === 'all_master') return '全分野制覇 幻';
-  if (t && t.indexOf('fc_mastered_') === 0) return '単語帳 ' + t.slice('fc_mastered_'.length) + '語達成';
   return t;
 }
 

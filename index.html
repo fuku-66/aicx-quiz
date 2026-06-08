@@ -23,6 +23,7 @@
       <div id="home-barchart" class="home__barchart"></div>
 
       <button id="home-cta" class="home__cta primary-btn" type="button">今日のクイズを始める</button>
+      <div id="home-next-unlock" class="home__next-unlock"></div>
 
       <section class="home__section" aria-labelledby="home-recent-title">
         <h3 id="home-recent-title" class="home__section-title">直近の解放</h3>
@@ -38,8 +39,8 @@
 
       <div class="mode-bar">
         <select id="mode-select" aria-label="モード選択">
-          <option value="normal" selected>通常モード</option>
-          <option value="weak">苦手優先モード</option>
+          <option value="normal">通常モード</option>
+          <option value="weak" selected>苦手優先モード</option>
         </select>
         <select id="pillar-select" aria-label="分野フィルタ">
           <option value="">全分野</option>
@@ -89,35 +90,54 @@
       <div id="pokedex-grid" class="pokedex-grid"></div>
     </section>
 
-    <!-- Flashcard (単語帳) view -->
-    <section id="view-flashcard" class="view" aria-labelledby="fc-title">
-      <h2 id="fc-title" class="view__title">単語帳</h2>
-      <div id="fc-chapter-filter" class="fc-chapter-filter"></div>
-      <div id="fc-progress" class="fc-progress"></div>
-      <div id="fc-card" class="fc-card" role="button" tabindex="0" aria-label="カードをタップして単語を確認">
-        <div class="fc-card__inner" id="fc-card-inner">
-          <div class="fc-card__front">
-            <div class="fc-card__chapter" id="fc-chapter-f"></div>
-            <div class="fc-card__meaning" id="fc-meaning"></div>
-            <div class="fc-card__hint">タップして単語を見る</div>
-          </div>
-          <div class="fc-card__back">
-            <img id="fc-image" class="fc-card__image" alt="" />
-          </div>
-        </div>
+    <!-- Glossary (用語集) view -->
+    <section id="view-flashcard" class="view" aria-labelledby="gl-title">
+      <h2 id="gl-title" class="view__title">用語集</h2>
+
+      <!-- 検索バー -->
+      <div class="gl-search-wrap">
+        <input id="gl-search" type="search" placeholder="用語・意味を検索…" autocomplete="off" aria-label="用語を検索">
       </div>
-      <div class="fc-controls">
-        <button id="fc-prev" class="secondary-btn" type="button">◀ 前</button>
-        <button id="fc-mastered" class="fc-mastered-btn" type="button">覚えた ✓</button>
-        <button id="fc-next" class="primary-btn" type="button">次へ ▶</button>
-      </div>
-      <div id="fc-mastered-count" class="fc-mastered-count"></div>
+
+      <!-- チャプタータグ -->
+      <div id="gl-chapter-filter" class="gl-chapter-filter"></div>
+
+      <!-- 件数 -->
+      <div id="gl-count" class="gl-count"></div>
+
+      <!-- グリッド -->
+      <div id="gl-grid" class="gl-grid"></div>
       <div id="fc-loading" class="loading">読み込み中...</div>
     </section>
+
+    <!-- 用語詳細モーダル -->
+    <div id="gl-modal-overlay" class="gl-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="gl-modal-term">
+      <div class="gl-modal">
+        <button class="gl-modal-close" id="gl-modal-close" aria-label="閉じる">✕</button>
+        <div class="gl-modal-img-wrap">
+          <img id="gl-modal-img" src="" alt="" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="gl-modal-chapter" id="gl-modal-chapter"></div>
+        <div class="gl-modal-term" id="gl-modal-term"></div>
+        <div class="gl-modal-reading" id="gl-modal-reading"></div>
+        <div class="gl-modal-fullname" id="gl-modal-fullname"></div>
+        <hr class="gl-modal-divider">
+        <div class="gl-modal-meaning" id="gl-modal-meaning"></div>
+        <div class="gl-modal-section" id="gl-modal-section"></div>
+      </div>
+    </div>
 
     <!-- Learn (資料) view -->
     <section id="view-learn" class="view" aria-labelledby="learn-title">
       <h2 id="learn-title" class="view__title">学習資料</h2>
+
+      <h3 class="learn__sub">学習カレンダー(直近365日)</h3>
+      <div id="calendar-summary" class="calendar-summary"></div>
+      <div id="calendar-grid" class="calendar-grid"></div>
+
+      <h3 class="learn__sub">統計</h3>
+      <div id="stats-content" class="stats-content">読み込み中...</div>
+
       <p class="learn__intro">公式テキスト6 chapterの解説資料です。新しいタブで開きます。</p>
       <div class="learn__list">
         <a class="learn__item" data-pillar="01" href="learn-01.html" target="_blank" rel="noopener">
@@ -145,10 +165,6 @@
           <span class="learn__name">AIエージェントを実装する5Dモデル</span>
         </a>
       </div>
-
-      <h3 class="learn__sub">学習カレンダー(直近365日)</h3>
-      <div id="calendar-summary" class="calendar-summary"></div>
-      <div id="calendar-grid" class="calendar-grid"></div>
     </section>
 
   </div>
@@ -204,9 +220,9 @@
   </div>
 </div>
 
+<script src="calendar.js"></script>
 <script src="main.js"></script>
 <script src="pokemon.js"></script>
-<script src="calendar.js"></script>
 <script src="flashcard.js"></script>
 </body>
 </html>
